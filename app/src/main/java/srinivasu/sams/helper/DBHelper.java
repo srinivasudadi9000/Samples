@@ -32,7 +32,7 @@ public class DBHelper {
         Toast.makeText(context.getApplicationContext(), size, Toast.LENGTH_SHORT).show();
         for (int i = 0; i < recces.size(); i++) {
             ;
-            if (validaterecord(recces.get(i).getRecce_id()).equals("notvalidate")) {
+            if (validaterecord(recces.get(i).getRecce_id(),"install").equals("notvalidate")) {
                 String index = String.valueOf(i);
                 // Toast.makeText(getApplicationContext(), index.toString() + "  r=  " + recces.get(i).getRecce_id(), Toast.LENGTH_SHORT).show();
                 insertRecce(recces.get(i).getRecce_id(), recces.get(i).getProject_id(), recces.get(i).getProduct_name().replaceAll("'", ""), recces.get(i).getZone_id()
@@ -54,7 +54,7 @@ public class DBHelper {
     public DBHelper(List<Installation> installations , Context context,String install){
         this.context = context;
         db = context.openOrCreateDatabase("SAMS", Context.MODE_PRIVATE, null);
-        db.execSQL("CREATE TABLE IF NOT EXISTS recce(recce_id VARCHAR unique,project_id VARCHAR," +
+        db.execSQL("CREATE TABLE IF NOT EXISTS install(recce_id VARCHAR unique,project_id VARCHAR," +
                 "vendor_id VARCHAR,crew_person_id VARCHAR,recce_date VARCHAR," +
                 "outlet_name VARCHAR,outlet_owner_name VARCHAR," +
                 "outlet_address VARCHAR,longitude VARCHAR,latitude VARCHAR,recce_image VARCHAR,installation_date VARCHAR" +
@@ -65,7 +65,7 @@ public class DBHelper {
         Toast.makeText(context.getApplicationContext(), size, Toast.LENGTH_SHORT).show();
         for (int i = 0; i < installations.size(); i++) {
             ;
-            if (validaterecord(installations.get(i).getRecce_id()).equals("notvalidate")) {
+            if (validaterecord(installations.get(i).getRecce_id(),"install").equals("notvalidate")) {
                 String index = String.valueOf(i);
                 // Toast.makeText(getApplicationContext(), index.toString() + "  r=  " + recces.get(i).getRecce_id(), Toast.LENGTH_SHORT).show();
                 insertInstall(installations.get(i).getRecce_id(), installations.get(i).getProject_id(),
@@ -106,21 +106,30 @@ public class DBHelper {
                               String height_inches,String product_name,String product0,String installation_image_upload_status,
                               String recce_image_path) {
         db.execSQL("INSERT INTO install VALUES('" + recce_id + "','" + project_id + "','" + vendor_id + "','" + crew_person_id + "','" +
-                recce_date + "','" + outlet_name + "','" + outlet_owner_name + "','" + outlet_address + "','" + longitude + "','" + outlet_address
+                recce_date + "','" + outlet_name + "','" + outlet_owner_name + "','" + outlet_address + "','" + longitude
                 + "','" + latitude + "','" + recce_image + "','" + installation_date + "','" + installation_image + "','" + installation_remarks
                 + "','" + width + "','" + height + "','" + width_feet + "','" + height_feet + "','" + width_inches + "','" +
                 height_inches + "','" + product_name + "','" + product0 + "','" + installation_image_upload_status + "','" + recce_image_path + "');");
 
     }
 
-    public String validaterecord(String recceid){
-
-        Cursor c=db.rawQuery("SELECT * FROM recce WHERE recce_id='"+recceid+"'", null);
-        if(c.moveToFirst())
-        {
-            return "validate";
-        }else {
-            return "notvalidate";
+    public String validaterecord(String recceid ,String install){
+        if (install.equals("install")){
+            Cursor c=db.rawQuery("SELECT * FROM install WHERE recce_id='"+recceid+"'", null);
+            if(c.moveToFirst())
+            {
+                return "validate";
+            }else {
+                return "notvalidate";
+            }
+        }else{
+            Cursor c=db.rawQuery("SELECT * FROM recce WHERE recce_id='"+recceid+"'", null);
+            if(c.moveToFirst())
+            {
+                return "validate";
+            }else {
+                return "notvalidate";
+            }
         }
     }
 

@@ -79,7 +79,7 @@ public class Installation {
     @SerializedName("recce_image_path")
     String recce_image_path;
 
-    Installation(
+    public Installation(
             String recce_id,
             String project_id,
             String vendor_id,
@@ -132,6 +132,7 @@ public class Installation {
         this.recce_image_path = recce_image_path;
 
     }
+
 
     public String getVendor_id() {
         return vendor_id;
