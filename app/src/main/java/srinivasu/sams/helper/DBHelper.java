@@ -3,11 +3,13 @@ package srinivasu.sams.helper;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 import android.widget.Toast;
 
 import java.util.List;
 
 import srinivasu.sams.model.Installation;
+import srinivasu.sams.model.Projects;
 import srinivasu.sams.model.Recce;
 
 /**
@@ -15,12 +17,35 @@ import srinivasu.sams.model.Recce;
  */
 
 public class DBHelper {
-    SQLiteDatabase db;
-    Context context;
-    public DBHelper(List<Recce> recces ,Context context){
+    static SQLiteDatabase db;
+    static Context context;
+
+    public DBHelper(List<Projects> projects, Context context, String project, String constru_one) {
         this.context = context;
         db = context.openOrCreateDatabase("SAMS", Context.MODE_PRIVATE, null);
-        db.execSQL("CREATE TABLE IF NOT EXISTS recce(recce_id VARCHAR unique,project_id VARCHAR," +
+        db.execSQL("CREATE TABLE IF NOT EXISTS project(project_id VARCHAR unique,project_name VARCHAR);");
+        String size = String.valueOf(projects.size());
+        Toast.makeText(context.getApplicationContext(), size, Toast.LENGTH_SHORT).show();
+        for (int i = 0; i < projects.size(); i++) {
+            if (validaterecord(projects.get(i).getProject_id(), "project").equals("notvalidate")) {
+                Log.d("projects",projects.get(i).getProject_id().toString());
+                insertProject(projects.get(i).getProject_id(), projects.get(i).getProject_name());
+            }else {
+                Log.d("projects","no ra");
+            }
+        }
+        //viewmydb();
+    }
+
+    private void insertProject(String project_id, String project_name) {
+        db.execSQL("INSERT INTO project VALUES('" + project_id + "','" + project_name+ "');");
+
+    }
+
+    public DBHelper(List<Recce> recces, Context context) {
+        this.context = context;
+        db = context.openOrCreateDatabase("SAMS", Context.MODE_PRIVATE, null);
+        db.execSQL("CREATE TABLE IF NOT EXISTS recce(recce_id VARCHAR unique,project_id VARCHAR,key VARCHAR,userid VARCHAR,crewpersonid VARCHAR," +
                 "product_name VARCHAR,zone_id VARCHAR,uom_id VARCHAR,uom_name VARCHAR," +
                 "recce_date VARCHAR,outlet_name VARCHAR,outlet_owner_name VARCHAR," +
                 "outlet_address VARCHAR,longitude VARCHAR,latitude VARCHAR,width VARCHAR," +
@@ -32,10 +57,10 @@ public class DBHelper {
         Toast.makeText(context.getApplicationContext(), size, Toast.LENGTH_SHORT).show();
         for (int i = 0; i < recces.size(); i++) {
             ;
-            if (validaterecord(recces.get(i).getRecce_id(),"install").equals("notvalidate")) {
+            if (validaterecord(recces.get(i).getRecce_id(), "recce").equals("notvalidate")) {
                 String index = String.valueOf(i);
                 // Toast.makeText(getApplicationContext(), index.toString() + "  r=  " + recces.get(i).getRecce_id(), Toast.LENGTH_SHORT).show();
-                insertRecce(recces.get(i).getRecce_id(), recces.get(i).getProject_id(), recces.get(i).getProduct_name().replaceAll("'", ""), recces.get(i).getZone_id()
+                insertRecce(recces.get(i).getRecce_id(), recces.get(i).getProject_id(), Preferences.getKey(), Preferences.getUserid(), Preferences.getCrewPersonid_project(), recces.get(i).getProduct_name().replaceAll("'", ""), recces.get(i).getZone_id()
                         , recces.get(i).getUom_id(), recces.get(i).getUom_name(), recces.get(i).getRecce_date(), recces.get(i).getOutlet_name().replaceAll("'", "")
                         , recces.get(i).getOutlet_owner_name(), recces.get(i).getOutlet_address().replaceAll("'", ""), recces.get(i).getLongitude()
                         , recces.get(i).getLatitude(), recces.get(i).getWidth(), recces.get(i).getHeight(), recces.get(i).getWidth_feet()
@@ -49,9 +74,7 @@ public class DBHelper {
     }
 
 
-
-
-    public DBHelper(List<Installation> installations , Context context,String install){
+    public DBHelper(List<Installation> installations, Context context, String install) {
         this.context = context;
         db = context.openOrCreateDatabase("SAMS", Context.MODE_PRIVATE, null);
         db.execSQL("CREATE TABLE IF NOT EXISTS install(recce_id VARCHAR unique,project_id VARCHAR," +
@@ -65,7 +88,7 @@ public class DBHelper {
         Toast.makeText(context.getApplicationContext(), size, Toast.LENGTH_SHORT).show();
         for (int i = 0; i < installations.size(); i++) {
             ;
-            if (validaterecord(installations.get(i).getRecce_id(),"install").equals("notvalidate")) {
+            if (validaterecord(installations.get(i).getRecce_id(), "install").equals("notvalidate")) {
                 String index = String.valueOf(i);
                 // Toast.makeText(getApplicationContext(), index.toString() + "  r=  " + recces.get(i).getRecce_id(), Toast.LENGTH_SHORT).show();
                 insertInstall(installations.get(i).getRecce_id(), installations.get(i).getProject_id(),
@@ -75,23 +98,22 @@ public class DBHelper {
                         , installations.get(i).getLongitude(), installations.get(i).getLatitude().replaceAll("'", ""),
                         installations.get(i).getRecce_image(), installations.get(i).getInstallation_date(),
                         installations.get(i).getInstallation_image(), installations.get(i).getInstallation_remarks(),
-                        installations.get(i).getWidth(),installations.get(i).getHeight(),installations.get(i).getWidth_feet(),
+                        installations.get(i).getWidth(), installations.get(i).getHeight(), installations.get(i).getWidth_feet(),
                         installations.get(i).getHeight_feet(), installations.get(i).getWidth_inches(),
                         installations.get(i).getHeight_inches(), installations.get(i).getProduct_name(),
-                        installations.get(i).getProduct0(),installations.get(i).getInstallation_image_upload_status(),
+                        installations.get(i).getProduct0(), installations.get(i).getInstallation_image_upload_status(),
                         installations.get(i).getRecce_image());
             }
         }
         //viewmydb();
     }
 
-
-    public void insertRecce(String recce_id, String project_id, String product_name, String zone_id, String uom_id, String uom_name,
+    public void insertRecce(String recce_id, String project_id, String key, String userid, String crewpersonid, String product_name, String zone_id, String uom_id, String uom_name,
                             String recce_date, String outlet_name, String outlet_owner_name, String outlet_address, String longitude,
                             String latitude, String width, String height, String width_feet, String height_feet, String width_inches,
                             String height_inches, String recce_image, String recce_image_1, String recce_image_2, String recce_image_3,
                             String recce_image_4, String product0, String uoms, String recce_image_upload_status) {
-        db.execSQL("INSERT INTO recce VALUES('" + recce_id + "','" + project_id + "','" + product_name + "','" + zone_id + "','" +
+        db.execSQL("INSERT INTO recce VALUES('" + recce_id + "','" + project_id + "','" + key + "','" + userid + "','" + crewpersonid + "','" + product_name + "','" + zone_id + "','" +
                 uom_id + "','" + uom_name + "','" + recce_date + "','" + outlet_name + "','" + outlet_owner_name + "','" + outlet_address
                 + "','" + longitude + "','" + latitude + "','" + width + "','" + height + "','" + width_feet + "','" + height_feet
                 + "','" + width_inches + "','" + height_inches + "','" + recce_image + "','" + recce_image_1 + "','" + recce_image_2 + "','" +
@@ -99,11 +121,11 @@ public class DBHelper {
 
     }
 
-    public void insertInstall(String recce_id,String project_id,String vendor_id,String crew_person_id,String recce_date,
-                              String outlet_name,String outlet_owner_name,String outlet_address,String longitude,String latitude,
-                              String recce_image,String installation_date,String installation_image,String installation_remarks,
-                              String width,String height,String width_feet,String height_feet,String width_inches,
-                              String height_inches,String product_name,String product0,String installation_image_upload_status,
+    public void insertInstall(String recce_id, String project_id, String vendor_id, String crew_person_id, String recce_date,
+                              String outlet_name, String outlet_owner_name, String outlet_address, String longitude, String latitude,
+                              String recce_image, String installation_date, String installation_image, String installation_remarks,
+                              String width, String height, String width_feet, String height_feet, String width_inches,
+                              String height_inches, String product_name, String product0, String installation_image_upload_status,
                               String recce_image_path) {
         db.execSQL("INSERT INTO install VALUES('" + recce_id + "','" + project_id + "','" + vendor_id + "','" + crew_person_id + "','" +
                 recce_date + "','" + outlet_name + "','" + outlet_owner_name + "','" + outlet_address + "','" + longitude
@@ -113,25 +135,59 @@ public class DBHelper {
 
     }
 
-    public String validaterecord(String recceid ,String install){
-        if (install.equals("install")){
-            Cursor c=db.rawQuery("SELECT * FROM install WHERE recce_id='"+recceid+"'", null);
-            if(c.moveToFirst())
-            {
+    public String validaterecord(String recceid, String instal) {
+        if (instal.equals("install")) {
+            Cursor c = db.rawQuery("SELECT * FROM install WHERE recce_id='" + recceid + "'", null);
+            if (c.moveToFirst()) {
                 return "validate";
-            }else {
+            } else {
                 return "notvalidate";
             }
-        }else{
-            Cursor c=db.rawQuery("SELECT * FROM recce WHERE recce_id='"+recceid+"'", null);
-            if(c.moveToFirst())
-            {
+        } else if (instal.equals("project")){
+            Cursor c = db.rawQuery("SELECT * FROM project WHERE project_id='" + recceid + "'", null);
+            if (c.moveToFirst()) {
                 return "validate";
-            }else {
+            } else {
+                return "notvalidate";
+            }
+        }else {
+            Cursor c = db.rawQuery("SELECT * FROM recce WHERE recce_id='" + recceid + "'", null);
+            if (c.moveToFirst()) {
+                return "validate";
+            } else {
                 return "notvalidate";
             }
         }
     }
 
+
+    public static void updateRecce_Localdb(String uom_id, String width, String key, String userid, String crewpersonid, String height, String width_feet, String height_feet,
+                                           String width_inches, String height_inches, String recce_id, String recce_image,
+                                           String recce_image_1, String recce_image_2, String recce_image_3, String recce_image_4,
+                                           String latitude, String longitude, String outlet_address, String project_id) {
+     /*   db.execSQL("INSERT INTO recce VALUES('" + recce_id + "','" + project_id + "','" + product_name + "','" + zone_id + "','" +
+                uom_id + "','" + uom_name + "','" + recce_date + "','" + outlet_name + "','" + outlet_owner_name + "','" + outlet_address
+                + "','" + longitude + "','" + latitude + "','" + width + "','" + height + "','" + width_feet + "','" + height_feet
+                + "','" + width_inches + "','" + height_inches + "','" + recce_image + "','" + recce_image_1 + "','" + recce_image_2 + "','" +
+                recce_image_3 + "','" + recce_image_4 + "','" + product0 + "','" + uoms + "','" + recce_image_upload_status + "');");
+*/
+
+        Cursor c = db.rawQuery("SELECT * FROM recce WHERE recce_id='" + recce_id + "' and project_id='" + project_id + "'", null);
+        if (c.moveToFirst()) {
+            Toast.makeText(context, "update Recce local data " + recce_id, Toast.LENGTH_SHORT).show();
+
+            db.execSQL("UPDATE recce SET uom_id='" + uom_id + "',width='" + width + "',key='" + key + "',userid='" + userid
+                    + "',crewpersonid='" + crewpersonid +
+                    "',height='" + height + "',width_feet='" + width_feet +
+                    "',height_feet='" + height_feet + "',width_inches='" + width_inches +
+                    "',height_inches='" + height_inches +
+                    "',recce_image='" + recce_image + "',recce_image_1='" + recce_image_1 +
+                    "',recce_image_2='" + recce_image_2 + "',recce_image_3='" + recce_image_3 +
+                    "',recce_image_4='" + recce_image_4 + "',latitude='" + latitude
+                    + "',longitude='" + longitude + "',outlet_address='" + outlet_address + "'");
+        } else {
+            Toast.makeText(context, "failure recce update", Toast.LENGTH_SHORT).show();
+        }
+    }
 
 }

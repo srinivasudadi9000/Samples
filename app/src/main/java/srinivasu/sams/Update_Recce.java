@@ -2,9 +2,11 @@ package srinivasu.sams;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -49,22 +51,30 @@ import srinivasu.sams.rest.ApiClient;
 import srinivasu.sams.rest.ApiInterface;
 
 public class Update_Recce extends Activity {
-    @BindView(R.id.tvRwidth) EditText tvRwidth;
-    @BindView(R.id.tvRheight) EditText tvRheight;
-    @BindView(R.id.ivRecceImage) ImageView ivRecceImage;
-    @BindView(R.id.ivOtherImage1) ImageView ivOtherImage1;
-    @BindView(R.id.ivOtherImage2) ImageView ivOtherImage2;
-    @BindView(R.id.ivOtherImage3) ImageView ivOtherImage3;
-    @BindView(R.id.ivOtherImage4) ImageView ivOtherImage4;
+    @BindView(R.id.tvRwidth)
+    EditText tvRwidth;
+    @BindView(R.id.tvRheight)
+    EditText tvRheight;
+    @BindView(R.id.ivRecceImage)
+    ImageView ivRecceImage;
+    @BindView(R.id.ivOtherImage1)
+    ImageView ivOtherImage1;
+    @BindView(R.id.ivOtherImage2)
+    ImageView ivOtherImage2;
+    @BindView(R.id.ivOtherImage3)
+    ImageView ivOtherImage3;
+    @BindView(R.id.ivOtherImage4)
+    ImageView ivOtherImage4;
     String iv_urlRC = null;
     Bitmap bmImage_main = null;
-    String width, height, uomid,productname;
+    String width, height, uomid, productname;
     String mainpic, image1, image2, image3, image4;
     File file;
     public int R_IMAGE = 2, O_IMAGE1 = 3, O_IMAGE2 = 4, O_IMAGE3 = 5, O_IMAGE4 = 6;
     protected Uri iv_url1 = null, iv_url2 = null, iv_url3 = null, iv_url4 = null;
     File otherImagefile1 = null, otherImagefile2 = null, otherImagefile3 = null, otherImagefile4 = null, RimgFile = null;
     String compress_image4 = null, compress_image3 = null, compress_image2 = null, compress_1 = null;
+    SQLiteDatabase db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,7 +88,7 @@ public class Update_Recce extends Activity {
         width = (getIntent().getStringExtra("width"));
         height = (getIntent().getStringExtra("height"));
         uomid = (getIntent().getStringExtra("uomid"));
-        productname= getIntent().getStringExtra("productname");
+        productname = getIntent().getStringExtra("productname");
         mainpic = getIntent().getStringExtra("mainpic");
         image1 = getIntent().getStringExtra("image1");
         image2 = getIntent().getStringExtra("image2");
@@ -217,19 +227,11 @@ public class Update_Recce extends Activity {
 
     @OnClick(R.id.done_rl)
     public void done() {
-        if (bmImage_main != null) {
-            Toast.makeText(getBaseContext(), "aksdflasd  " + bmImage_main.toString(), Toast.LENGTH_SHORT).show();
-
-        } else {
-            Toast.makeText(getBaseContext(), "thankuou", Toast.LENGTH_SHORT).show();
-        }
-
 
         RequestBody key = RequestBody.create(MediaType.parse("text/plain"), Preferences.getKey());
         RequestBody userid = RequestBody.create(MediaType.parse("text/plain"), Preferences.getUserid());
         RequestBody crew_person_id = RequestBody.create(MediaType.parse("text/plain"), Preferences.getCrewPersonid_project());
         RequestBody recce_id = RequestBody.create(MediaType.parse("text/plain"), getIntent().getStringExtra("recce_id").toString());
-
         /*Log.d("iv_url1", iv_url1.toString());
         Log.d("iv_url2", iv_url2.toString());
         Log.d("iv_url3", iv_url3.toString());
@@ -255,10 +257,17 @@ public class Update_Recce extends Activity {
             RequestBody lat = RequestBody.create(MediaType.parse("text/plain"), "20.22");
             RequestBody logtitude = RequestBody.create(MediaType.parse("text/plain"), "22.33");
             RequestBody address = RequestBody.create(MediaType.parse("text/plain"), "vizag");
-            uploadRecce(uomid, tvRwidth.getText().toString(),tvRheight.getText().toString()
-
+            uploadRecce(uomid, tvRwidth.getText().toString(), tvRheight.getText().toString()
                     , "22", "22", "2", "2", key, userid, crew_person_id, recce_id, filePart, imageFilePart1,
                     imageFilePart2, imageFilePart3, imageFilePart4, lat, logtitude, address);
+
+            updateRecce_Localdb(uomid, tvRwidth.getText().toString(), tvRheight.getText().toString()
+                    , "22", "22", "2", "2", Preferences.getKey(), Preferences.getUserid(), Preferences.getCrewPersonid_project()
+                    , getIntent().getStringExtra("recce_id").toString(), mainpic.getAbsolutePath().toString(),
+                    otherImagefile1.getAbsolutePath().toString(), otherImagefile2.getAbsolutePath().toString()
+                    , otherImagefile3.getAbsolutePath().toString(), otherImagefile4.getAbsolutePath().toString(),
+                    "20.22", "20.22", "vizag", Preferences.getProjectId());
+            Log.d("updateimagereccepath", mainpic.getAbsolutePath().toString());
         }
     }
 
@@ -546,7 +555,7 @@ public class Update_Recce extends Activity {
         }
 
         FileOutputStream out = null;
-       // String filename = getFilename();
+        // String filename = getFilename();
         try {
             out = new FileOutputStream(imageUri);
 
@@ -559,6 +568,36 @@ public class Update_Recce extends Activity {
 
         return imageUri;
 
+    }
+
+    public void
+    updateRecce_Localdb(String uom_id, String width, String key, String userid, String crewpersonid, String height, String width_feet, String height_feet,
+                        String width_inches, String height_inches, String recce_id, String recce_image,
+                        String recce_image_1, String recce_image_2, String recce_image_3, String recce_image_4,
+                        String latitude, String longitude, String outlet_address, String project_id) {
+
+        db = openOrCreateDatabase("SAMS", Context.MODE_PRIVATE, null);
+        Cursor c = db.rawQuery("SELECT * FROM recce WHERE recce_id='" + recce_id + "' and project_id='" + project_id + "'", null);
+        if (c.moveToFirst()) {
+            Toast.makeText(Update_Recce.this, "update Recce local data " + recce_id, Toast.LENGTH_SHORT).show();
+            String rc=c.getString(c.getColumnIndex("recce_id"));
+            String pj=c.getString(c.getColumnIndex("project_id"));
+            String pn=c.getString(c.getColumnIndex("product_name"));
+            Log.d("values",rc+" "+pj+"  "+pn);
+            db.execSQL("UPDATE recce SET uom_id='" + uom_id + "',width='" + width + "',key='" + key + "',userid='" + userid
+                    + "',crewpersonid='" + crewpersonid +
+                    "',height='" + height + "',width_feet='" + width_feet +
+                    "',height_feet='" + height_feet + "',width_inches='" + width_inches +
+                    "',height_inches='" + height_inches +
+                    "',recce_image='" + recce_image + "',recce_image_1='" + recce_image_1 +
+                    "',recce_image_2='" + recce_image_2 + "',recce_image_3='" + recce_image_3 +
+                    "',recce_image_4='" + recce_image_4 + "',latitude='" + latitude
+                    + "',longitude='" + longitude + "',outlet_address='" + outlet_address + "'");
+
+        } else {
+            Toast.makeText(Update_Recce.this, "failure recce update", Toast.LENGTH_SHORT).show();
+        }
+        Log.d("success","successfully updated recce");
     }
 
 

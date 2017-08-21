@@ -2,11 +2,11 @@ package srinivasu.sams.Adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.List;
@@ -48,10 +48,10 @@ public class ProjectAdapter extends RecyclerView.Adapter<ProjectAdapter.Projecth
 
     public class Projectholder extends RecyclerView.ViewHolder{
         TextView project_name_tv;
-        CardView project_single_card;
+        RelativeLayout project_single_card;
         public Projectholder(final View itemView) {
             super(itemView);
-            project_single_card = (CardView)itemView.findViewById(R.id.project_single_card);
+            project_single_card = (RelativeLayout)itemView.findViewById(R.id.project_single_card);
             project_name_tv= (TextView)itemView.findViewById(R.id.project_name_tv);
             project_single_card.setOnClickListener(new View.OnClickListener() {
                 @Override

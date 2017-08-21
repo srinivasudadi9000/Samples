@@ -13,7 +13,7 @@ public class Projects {
     @SerializedName("project_id")
     String project_id;
 
-    Projects(String project_name,String project_id){
+    public Projects(String project_name, String project_id){
         this.project_name = project_name;this.project_id = project_id;
     }
 

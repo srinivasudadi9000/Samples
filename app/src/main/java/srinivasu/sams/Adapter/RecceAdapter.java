@@ -2,7 +2,10 @@ package srinivasu.sams.Adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +21,7 @@ import java.util.List;
 import srinivasu.sams.R;
 import srinivasu.sams.Update_Recce;
 import srinivasu.sams.model.Recce;
+import srinivasu.sams.validation.Validation;
 
 /**
  * Created by venky on 11-Aug-17.
@@ -52,15 +56,35 @@ public class RecceAdapter extends RecyclerView.Adapter<RecceAdapter.Recceholder>
         holder.recce_status_tv.setText(receelist.get(position).getRecce_image_upload_status().toString());
       //  holder.recce_img.setText(receelist.get(position).getOutlet_name().toString());
 
+        Bitmap bmImage = null;
+        if (!Validation.internet(context)) {
+            BitmapFactory.Options opt = new BitmapFactory.Options();
+            opt.inSampleSize = 8;
+            opt.inMutable = true;
+             bmImage = BitmapFactory.decodeFile(receelist.get(position).getRecce_image().toString(), opt);
+            holder.recce_img.setImageBitmap(bmImage);
+            /*Uri uri = Uri.parse(receelist.get(position).getRecce_image().toString());
+            Picasso.with(context)
+                    .load(String.valueOf(bmImage))
+                    .memoryPolicy(MemoryPolicy.NO_CACHE )
+                    .networkPolicy(NetworkPolicy.NO_CACHE)
+                    .resize(512, 512)
+                    .error(R.drawable.dummy)
+                    .noFade()
+                    .into(holder.recce_img);
+            */Log.d("imagepath",receelist.get(position).getRecce_id().toString()+" " +receelist.get(position).getRecce_image().toString());
+            //Toast.makeText(getBaseContext(), "local db recces", Toast.LENGTH_LONG).show();
+        } else {
+            Picasso.with(context)
+                    .load("http://128.199.131.14/samsdev/web/image_uploads/recce_uploads/"+receelist.get(position).getRecce_image().toString())
+                    .memoryPolicy(MemoryPolicy.NO_CACHE )
+                    .networkPolicy(NetworkPolicy.NO_CACHE)
+                    .resize(512, 512)
+                    .error(R.drawable.dummy)
+                    .noFade()
+                    .into(holder.recce_img);
+        }
 
-        Picasso.with(context)
-                .load("http://128.199.131.14/samsdev/web/image_uploads/recce_uploads/"+receelist.get(position).getRecce_image().toString())
-                .memoryPolicy(MemoryPolicy.NO_CACHE )
-                .networkPolicy(NetworkPolicy.NO_CACHE)
-                .resize(512, 512)
-                .error(R.drawable.dummy)
-                .noFade()
-                .into(holder.recce_img);
 
         if (receelist.get(position).getRecce_image_upload_status().equals("Completed")){
             holder.recce_img.setScaleType(ImageView.ScaleType.FIT_XY);

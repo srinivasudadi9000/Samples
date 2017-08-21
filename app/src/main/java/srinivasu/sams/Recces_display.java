@@ -51,12 +51,12 @@ public class Recces_display extends Activity {
         Log.d("crewpersionid", Preferences.getCrewPersonid_project());
         Log.d("projectid", getIntent().getStringExtra("projectid").toString());
 
-       // getRecceslist();
+       //
         if (!Validation.internet(Recces_display.this)) {
             getRecces_from_local();
-            Toast.makeText(getBaseContext(), "good ra", Toast.LENGTH_LONG).show();
+            Toast.makeText(getBaseContext(), "local db recces", Toast.LENGTH_LONG).show();
         } else {
-            getRecces_from_local();
+            getRecceslist();
         }
 
     }
