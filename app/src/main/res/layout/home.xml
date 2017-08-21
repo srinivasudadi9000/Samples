@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_home"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:layout_gravity="center"
+    android:background="#ffffff"
+    android:gravity="center">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_gravity="center"
+            android:gravity="center"
+            >
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorPrimary"
+                android:textSize="19sp"
+                android:padding="5dp"
+                android:text="Welcome"
+                android:id="@+id/crewname"
+                android:gravity="center_horizontal|center_vertical"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginRight="20dp"
+                />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorPrimary"
+                android:textSize="24sp"
+                android:padding="5dp"
+                android:textStyle="bold"
+                android:id="@+id/crewnames_tv"
+                android:gravity="center"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorPrimary"
+                android:textSize="14sp"
+                android:padding="2dp"
+                android:text="Last Sync : "
+                android:id="@+id/lastSync_tv"
+                android:gravity="center"/>
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/Recce_btn"
+                android:textAllCaps="false"
+                android:textSize="17sp"
+                android:background="@color/colorPrimary"
+                android:textColor="#fff"
+                android:layout_margin="20dp"
+                android:text="Recce"/>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/Installtion_btn"
+                android:textAllCaps="false"
+                android:textSize="17sp"
+
+                android:background="@color/colorPrimary"
+                android:textColor="#fff"
+                android:layout_margin="20dp"
+                android:text="Installation"/>
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/Sync_btn"
+                android:textAllCaps="false"
+                android:textSize="17sp"
+                android:background="@color/colorPrimary"
+                android:textColor="#fff"
+                android:layout_margin="20dp"
+
+                android:text="Sync"/>
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/logout_btn"
+                android:textAllCaps="false"
+                android:textSize="17sp"
+                android:background="@color/colorPrimary"
+                android:textColor="#fff"
+                android:layout_margin="20dp"
+                android:text="Log Out"/>
+
+        </LinearLayout>
+    </ScrollView>
+
+
+
+
+</LinearLayout>
