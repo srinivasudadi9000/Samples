@@ -22,6 +22,7 @@ import retrofit2.http.Query;
 import srinivasu.sams.helper.DBHelper;
 import srinivasu.sams.helper.Preferences;
 import srinivasu.sams.model.Recce;
+import srinivasu.sams.model.UploadInstall;
 import srinivasu.sams.model.UploadRecce;
 import srinivasu.sams.rest.ApiClient;
 import srinivasu.sams.rest.ApiInterface;
@@ -31,13 +32,90 @@ public class Sync extends AppCompatActivity {
     String rec_id,project_id,product_name,uom_id,uom_name,outlet_name,outlet_address,longitude,latitude,
             width,height,width_feet,height_feet,width_inches,height_inches,recce_image,recce_image_1,
             recce_image_2,recce_image_3,recce_image_4,recce_image_upload_status,product0;
-    File RimgFile=null,otherImagefile1=null,otherImagefile2=null,otherImagefile3=null,otherImagefile4=null;
+    File RimgFile=null,RimgFile_install=null,otherImagefile1=null,otherImagefile2=null,otherImagefile3=null,otherImagefile4=null;
+    String installation_date_tv,installation_remarks_tv,key_tv,userid_tv,crew_person_id_tv,recce_id_tv,project_id_tv
+            ,installation_image;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sync);
         getRecces_from_local();
+        getInstall_from_local();
     }
+
+
+    public  void getInstall_from_local() {
+        db = openOrCreateDatabase("SAMS", Context.MODE_PRIVATE, null);
+        Toast.makeText(Sync.this, "view my db install data ", Toast.LENGTH_SHORT).show();
+        //  Cursor c=db.rawQuery("SELECT * FROM recce WHERE recce_id='"+email+"' and resume='"+resumename+"'", null);
+        Cursor c = db.rawQuery("SELECT * FROM install WHERE product0='offline_update'", null);
+
+        if (c.moveToFirst()) {
+            while (!c.isAfterLast()) {
+
+                 installation_date_tv = c.getString(c.getColumnIndex("installation_date"));
+                 installation_remarks_tv=c.getString(c.getColumnIndex("installation_remarks"));
+                 key_tv = c.getString(c.getColumnIndex("key"));
+                 userid_tv=c.getString(c.getColumnIndex("userid"));
+                 crew_person_id_tv=c.getString(c.getColumnIndex("crew_person_id"));
+                  recce_id_tv=c.getString(c.getColumnIndex("recce_id"));
+                 project_id_tv=c.getString(c.getColumnIndex("project_id"));
+                 installation_image=c.getString(c.getColumnIndex("installation_image"));
+                RimgFile_install = new File(installation_image);
+
+                RequestBody key = RequestBody.create(MediaType.parse("text/plain"), key_tv);
+                RequestBody userid = RequestBody.create(MediaType.parse("text/plain"), userid_tv);
+                RequestBody crew_person_id = RequestBody.create(MediaType.parse("text/plain"), crew_person_id_tv);
+                RequestBody recce_id = RequestBody.create(MediaType.parse("text/plain"), recce_id_tv);
+                RequestBody project_id = RequestBody.create(MediaType.parse("text/plain"), project_id_tv);
+                MultipartBody.Part imageFilePart1 = MultipartBody.Part.createFormData("installation_image", RimgFile_install.getName(),
+                        RequestBody.create(MediaType.parse("image/*"), RimgFile_install));
+                updateInstall(installation_date_tv,installation_remarks_tv,key,userid,crew_person_id,recce_id,
+                        project_id,imageFilePart1);
+                c.moveToNext();
+            }
+        }
+    }
+
+    public void updateInstall(@Query("installation_date") final String installation_date,
+                              @Query("installation_remarks") final String installation_remarks,
+                              @Part("key") RequestBody key,
+                              @Part("user_id") RequestBody user_id, @Part("crew_person_id") RequestBody crew_person_id,
+                              @Part("recce_id") final RequestBody recce_id, @Part("project_id") final RequestBody project_id,
+                              @Part final MultipartBody.Part installation_image) {
+        ApiInterface apiService = ApiClient.getSams().create(ApiInterface.class);
+        Call<UploadInstall> call = apiService.getUploadInstall(installation_date,installation_remarks, key,
+                user_id,  crew_person_id, recce_id,project_id,installation_image);
+        call.enqueue(new Callback<UploadInstall>() {
+            @Override
+            public void onResponse(Call<UploadInstall> call, Response<UploadInstall> response) {
+                String hello = String.valueOf(response.body().getCrew_person_name());
+                Toast.makeText(getBaseContext(),hello,Toast.LENGTH_SHORT).show();
+
+               /* if (response.isSuccessful()){
+                    Toast.makeText(getBaseContext(),"successfull ",Toast.LENGTH_SHORT).show();
+                    finish();
+                }else {
+                    Toast.makeText(getBaseContext(),"Notvsuccessful ",Toast.LENGTH_SHORT).show();
+                }*/
+
+                DBHelper.updateInstall_Localdb(installation_date_tv,installation_remarks_tv,key_tv,userid_tv,
+                        crew_person_id_tv,recce_id_tv,
+                        project_id_tv,RimgFile_install.getAbsolutePath().toString(),"online_update",Sync.this);
+            }
+
+            @Override
+            public void onFailure(Call<UploadInstall> call, Throwable throwable) {
+                Toast.makeText(getBaseContext(), throwable.toString(), Toast.LENGTH_SHORT).show();
+                DBHelper.updateInstall_Localdb(installation_date_tv,installation_remarks_tv,key_tv,userid_tv,
+                        crew_person_id_tv,recce_id_tv,
+                        project_id_tv,RimgFile_install.getAbsolutePath().toString(),"offline_update",Sync.this);
+
+                Log.d("message_image",throwable.toString());
+            }
+        });
+    }
+
 
     public void getRecces_from_local() {
         ArrayList<Recce> recces_offline = new ArrayList<Recce>();

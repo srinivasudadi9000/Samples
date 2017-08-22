@@ -593,7 +593,7 @@ public class Update_Recce extends Activity {
                 "',recce_image_2='" + recce_image_2 + "',recce_image_3='" + recce_image_3 +
                 "',recce_image_4='" + recce_image_4 + "',latitude='" + latitude
                 + "',recce_image_upload_status='" + status + "',longitude='" + longitude + "',outlet_address='" + outlet_address + "'" + "WHERE recce_id=" + recce_id);
-
+        db.close();
         Log.d("success", "successfully updated recce");
     }
 

@@ -73,17 +73,19 @@ public class DBHelper {
         //viewmydb();
     }
 
-
     public DBHelper(List<Installation> installations, Context context, String install) {
         this.context = context;
         db = context.openOrCreateDatabase("SAMS", Context.MODE_PRIVATE, null);
+
+
         db.execSQL("CREATE TABLE IF NOT EXISTS install(recce_id VARCHAR unique,project_id VARCHAR," +
                 "vendor_id VARCHAR,crew_person_id VARCHAR,recce_date VARCHAR," +
                 "outlet_name VARCHAR,outlet_owner_name VARCHAR," +
                 "outlet_address VARCHAR,longitude VARCHAR,latitude VARCHAR,recce_image VARCHAR,installation_date VARCHAR" +
                 ",installation_image VARCHAR,installation_remarks VARCHAR ,width VARCHAR," +
                 "height VARCHAR,width_feet VARCHAR,height_feet VARCHAR,width_inches VARCHAR," +
-                "height_inches VARCHAR,product_name VARCHAR,product0 VARCHAR,installation_image_upload_status VARCHAR,recce_image_path VARCHAR);");
+                "height_inches VARCHAR,product_name VARCHAR,product0 VARCHAR,installation_image_upload_status VARCHAR," +
+                "recce_image_path VARCHAR,key VARCHAR,userid VARCHAR);");
         String size = String.valueOf(installations.size());
         Toast.makeText(context.getApplicationContext(), size, Toast.LENGTH_SHORT).show();
         for (int i = 0; i < installations.size(); i++) {
@@ -102,12 +104,11 @@ public class DBHelper {
                         installations.get(i).getHeight_feet(), installations.get(i).getWidth_inches(),
                         installations.get(i).getHeight_inches(), installations.get(i).getProduct_name(),
                         installations.get(i).getProduct0(), installations.get(i).getInstallation_image_upload_status(),
-                        installations.get(i).getRecce_image());
+                        installations.get(i).getRecce_image(),Preferences.getKey(),Preferences.getUserid());
             }
         }
         //viewmydb();
     }
-
     public void insertRecce(String recce_id, String project_id, String key, String userid, String crewpersonid, String product_name, String zone_id, String uom_id, String uom_name,
                             String recce_date, String outlet_name, String outlet_owner_name, String outlet_address, String longitude,
                             String latitude, String width, String height, String width_feet, String height_feet, String width_inches,
@@ -120,21 +121,24 @@ public class DBHelper {
                 recce_image_3 + "','" + recce_image_4 + "','" + product0 + "','" + uoms + "','" + recce_image_upload_status + "');");
 
     }
-
     public void insertInstall(String recce_id, String project_id, String vendor_id, String crew_person_id, String recce_date,
                               String outlet_name, String outlet_owner_name, String outlet_address, String longitude, String latitude,
                               String recce_image, String installation_date, String installation_image, String installation_remarks,
                               String width, String height, String width_feet, String height_feet, String width_inches,
                               String height_inches, String product_name, String product0, String installation_image_upload_status,
-                              String recce_image_path) {
+                              String recce_image_path,String key,String userid) {
+        String outletname,outletaddress,prod_name;
+        if (outlet_name.length()>0){outletname = outlet_name.replaceAll("'", "");}else {outletname=outlet_name;}
+        if (outlet_address.length()>0){outletaddress = outlet_address.replaceAll("'", "");}else {outletaddress=outlet_address;}
+        if (product_name.length()>0){prod_name = product_name.replaceAll("'", "");}else {prod_name=product_name;}
+
         db.execSQL("INSERT INTO install VALUES('" + recce_id + "','" + project_id + "','" + vendor_id + "','" + crew_person_id + "','" +
-                recce_date + "','" + outlet_name + "','" + outlet_owner_name + "','" + outlet_address + "','" + longitude
+                recce_date + "','" + outletname + "','" + outlet_owner_name + "','" + outletaddress + "','" + longitude
                 + "','" + latitude + "','" + recce_image + "','" + installation_date + "','" + installation_image + "','" + installation_remarks
                 + "','" + width + "','" + height + "','" + width_feet + "','" + height_feet + "','" + width_inches + "','" +
-                height_inches + "','" + product_name + "','" + product0 + "','" + installation_image_upload_status + "','" + recce_image_path + "');");
+                height_inches + "','" + prod_name + "','" + product0 + "','" + installation_image_upload_status + "','" + recce_image_path + "','" + key + "','" + userid + "');");
 
     }
-
     public String validaterecord(String recceid, String instal) {
         if (instal.equals("install")) {
             Cursor c = db.rawQuery("SELECT * FROM install WHERE recce_id='" + recceid + "'", null);
@@ -181,5 +185,21 @@ public class DBHelper {
         Log.d("success", "successfully updated recce");
     }
 
+
+    public static void updateInstall_Localdb(String install_date, String install_remark, String key, String userid, String crewpersonid,
+                                             String recce_id, String project_id, String imagefilepart1, String mode, Context mycontext) {
+
+        db = mycontext.openOrCreateDatabase("SAMS", Context.MODE_PRIVATE, null);
+
+        db.execSQL("UPDATE install SET installation_date='" + install_date + "',installation_remarks='" + install_remark + "',key='" + key + "',userid='" + userid
+                + "',crew_person_id='" + crewpersonid +
+                "',project_id='" + project_id + "',installation_image='" + imagefilepart1 + "',product0='" + mode +"'"+
+                " WHERE recce_id=" + recce_id);
+
+
+
+        db.close();
+        Log.d("success", "successfully updated recce");
+    }
 
 }

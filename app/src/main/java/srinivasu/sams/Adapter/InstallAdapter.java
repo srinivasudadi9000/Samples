@@ -2,8 +2,9 @@ package srinivasu.sams.Adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,7 @@ import java.util.List;
 import srinivasu.sams.R;
 import srinivasu.sams.Update_Install;
 import srinivasu.sams.model.Installation;
+import srinivasu.sams.validation.Validation;
 
 /**
  * Created by venky on 11-Aug-17.
@@ -48,33 +50,29 @@ public class InstallAdapter extends RecyclerView.Adapter<InstallAdapter.Reccehol
         holder.productname_tv.setText(installations.get(position).getProduct_name().toString());
         holder.height_width_tv.setText(installations.get(position).getHeight().toString() + "X" + installations.get(position).getWidth().toString());
         holder.recce_status_tv.setText(installations.get(position).getInstallation_image_upload_status().toString());
-        //  holder.recce_img.setText(receelist.get(position).getOutlet_name().toString());
-        ;
 
-        /*Picasso.with(context)
-                .load("http://128.199.131.14/samsdev/web/image_uploads/recce_uploads/" + installations.get(position).getRecce_image().toString())
-                .memoryPolicy(MemoryPolicy.NO_CACHE)
-                .networkPolicy(NetworkPolicy.NO_CACHE)
-                .resize(512, 512)
-                .error(R.drawable.dummy)
-                .noFade()
-                .into(holder.recce_img);*/
         if (installations.get(position).getInstallation_image_upload_status().equals("Completed")){
             holder.recce_img.setScaleType(ImageView.ScaleType.FIT_XY);
         }else {
             holder.recce_img.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
         }
 
-        Picasso.with(context)
-                .load("http://128.199.131.14/samsdev/web/image_uploads/install_uploads/" + installations.get(position).getInstallation_image().toString())
-                .memoryPolicy(MemoryPolicy.NO_CACHE)
-                .networkPolicy(NetworkPolicy.NO_CACHE)
-                .resize(512, 512)
-                .error(R.drawable.install_dummy)
-                .noFade()
-                .into(holder.recce_img);
+        Bitmap bmImage = null;
+        if (!Validation.internet(context)) {
+            bmImage = BitmapFactory.decodeFile(installations.get(position).getInstallation_image().toString(), null);
+            holder.recce_img.setImageBitmap(bmImage);
 
-        Log.d("image", installations.get(position).getRecce_image_path().toString());
+        } else {
+            Picasso.with(context)
+                    .load("http://128.199.131.14/samsdev/web/image_uploads/install_uploads/" + installations.get(position).getInstallation_image().toString())
+                    .memoryPolicy(MemoryPolicy.NO_CACHE)
+                    .networkPolicy(NetworkPolicy.NO_CACHE)
+                    .resize(512, 512)
+                    .error(R.drawable.install_dummy)
+                    .noFade()
+                    .into(holder.recce_img);
+        }
+
     }
 
     @Override

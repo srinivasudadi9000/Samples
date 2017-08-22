@@ -26,6 +26,7 @@ import srinivasu.sams.model.GetInstall;
 import srinivasu.sams.model.Installation;
 import srinivasu.sams.rest.ApiClient;
 import srinivasu.sams.rest.ApiInterface;
+import srinivasu.sams.validation.Validation;
 
 public class Install_display extends Activity {
     @BindView(R.id.install_recyler)
@@ -38,9 +39,13 @@ public class Install_display extends Activity {
         setContentView(R.layout.install_display);
         ButterKnife.bind(this);
         install_recyler.setLayoutManager(new LinearLayoutManager(this));
-        //getInstalllist();
-        getInstall_from_local();
 
+        if (!Validation.internet(Install_display.this)) {
+            getInstall_from_local();
+            Toast.makeText(getBaseContext(), "local db recces", Toast.LENGTH_LONG).show();
+        } else {
+            getInstalllist();
+        }
     }
 
     @OnClick(R.id.back)
@@ -81,7 +86,7 @@ public class Install_display extends Activity {
                 String name = c.getString(c.getColumnIndex("recce_id"));
                 String recce_id=c.getString(c.getColumnIndex("recce_id"));
                 String project_id=c.getString(c.getColumnIndex("project_id"));
-                String vendor_id=c.getString(c.getColumnIndex("vendor_id"));
+               // String vendor_id=c.getString(c.getColumnIndex("vendor_id"));
                 String crew_person_id=c.getString(c.getColumnIndex("crew_person_id"));
                 String recce_date=c.getString(c.getColumnIndex("recce_date"));
                 String outlet_name=c.getString(c.getColumnIndex("outlet_name"));
@@ -102,12 +107,12 @@ public class Install_display extends Activity {
                 String installation_image=c.getString(c.getColumnIndex("installation_image"));
                 String installation_remarks=c.getString(c.getColumnIndex("installation_remarks"));
                 String installation_image_upload_status=c.getString(c.getColumnIndex("installation_image_upload_status"));
-                String recce_image_path=c.getString(c.getColumnIndex("recce_image_path"));
+               // String recce_image_path=c.getString(c.getColumnIndex("recce_image_path"));
 
-                install_offline.add(new Installation(recce_id,project_id,vendor_id,crew_person_id,recce_date,outlet_name,
+                install_offline.add(new Installation(recce_id,project_id,null,crew_person_id,recce_date,outlet_name,
                         outlet_owner_name,outlet_address,longitude,latitude,recce_image,installation_date,installation_image,
                         installation_remarks, width,height,width_feet,height_feet,
-                        width_inches,height_inches,product_name,product0,installation_image_upload_status,recce_image_path));
+                        width_inches,height_inches,product_name,product0,installation_image_upload_status,null));
                 Toast.makeText(Install_display.this, " " + name, Toast.LENGTH_SHORT).show();
                 Log.d("values",name);
                 //  list.add(name);

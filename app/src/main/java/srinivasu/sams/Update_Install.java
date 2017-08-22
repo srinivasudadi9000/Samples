@@ -1,8 +1,10 @@
 package srinivasu.sams;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -41,12 +43,14 @@ import srinivasu.sams.helper.Preferences;
 import srinivasu.sams.model.UploadInstall;
 import srinivasu.sams.rest.ApiClient;
 import srinivasu.sams.rest.ApiInterface;
+import srinivasu.sams.validation.Validation;
 
 public class Update_Install extends Activity {
     @BindView(R.id.recceImage) ImageView recceImage;
     @BindView(R.id.recceInstallImage) ImageView recceInstallImage;
     @BindView(R.id.InstallationRemarks_et)  EditText InstallationRemarks_et;
     @BindView(R.id.InstallationDate_et)  EditText InstallationDate_et;
+    SQLiteDatabase db;
     File installimage = null;
     protected Uri iv_url1 = null;
     @Override
@@ -57,24 +61,31 @@ public class Update_Install extends Activity {
 
         InstallationDate_et.setText(getIntent().getStringExtra("install_date"));
         InstallationRemarks_et.setText(getIntent().getStringExtra("install_remark"));
-        Picasso.with(Update_Install.this)
-                .load("http://128.199.131.14/samsdev/web/image_uploads/recce_uploads/" + getIntent().getStringExtra("recce_image"))
-                .memoryPolicy(MemoryPolicy.NO_CACHE)
-                .networkPolicy(NetworkPolicy.NO_CACHE)
-                .resize(512, 512)
-                .error(R.drawable.dummy)
-                .noFade()
-                .into(recceImage);
 
-        Picasso.with(Update_Install.this)
-                .load("http://128.199.131.14/samsdev/web/image_uploads/install_uploads/" +getIntent().getStringExtra("install_image"))
-                .memoryPolicy(MemoryPolicy.NO_CACHE)
-                .networkPolicy(NetworkPolicy.NO_CACHE)
-                .resize(512, 512)
-                .error(R.drawable.dummy)
-                .noFade()
-                .into(recceInstallImage);
+        Bitmap bmImage = null;
+        if (!Validation.internet(Update_Install.this)) {
+            bmImage = BitmapFactory.decodeFile(getIntent().getStringExtra("install_image"), null);
+            recceInstallImage.setImageBitmap(bmImage);
 
+        } else {
+            Picasso.with(Update_Install.this)
+                    .load("http://128.199.131.14/samsdev/web/image_uploads/recce_uploads/" + getIntent().getStringExtra("recce_image"))
+                    .memoryPolicy(MemoryPolicy.NO_CACHE)
+                    .networkPolicy(NetworkPolicy.NO_CACHE)
+                    .resize(512, 512)
+                    .error(R.drawable.dummy)
+                    .noFade()
+                    .into(recceImage);
+
+            Picasso.with(Update_Install.this)
+                    .load("http://128.199.131.14/samsdev/web/image_uploads/install_uploads/" +getIntent().getStringExtra("install_image"))
+                    .memoryPolicy(MemoryPolicy.NO_CACHE)
+                    .networkPolicy(NetworkPolicy.NO_CACHE)
+                    .resize(512, 512)
+                    .error(R.drawable.dummy)
+                    .noFade()
+                    .into(recceInstallImage);
+        }
 
 
     }
@@ -93,8 +104,12 @@ public class Update_Install extends Activity {
         RequestBody project_id = RequestBody.create(MediaType.parse("text/plain"), Preferences.getProjectId().toString());
         MultipartBody.Part imageFilePart1 = MultipartBody.Part.createFormData("installation_image", installimage.getName(),
                 RequestBody.create(MediaType.parse("image/*"), installimage));
-        updateInstall(InstallationDate_et.getText().toString(),InstallationRemarks_et.getText().toString(),
-                key,userid,crew_person_id,recce_id,project_id,imageFilePart1);
+        if (iv_url1.toString()!=null){
+            updateInstall(InstallationDate_et.getText().toString(),InstallationRemarks_et.getText().toString(),
+                    key,userid,crew_person_id,recce_id,project_id,imageFilePart1);
+        }else {
+            Toast.makeText(getBaseContext(),"please fill all the details",Toast.LENGTH_SHORT).show();
+        }
         //updateInstall("21-2-2017","asdfasdf",key,userid,crew_person_id,recce_id,project_id,imageFilePart1);
     }
     @OnClick(R.id.recceInstallImage)
@@ -127,12 +142,12 @@ public class Update_Install extends Activity {
         }
     }
 
-    public void updateInstall(@Query("installation_date") String installation_date,
-                              @Query("installation_remarks") String installation_remarks,
+    public void updateInstall(@Query("installation_date") final String installation_date,
+                              @Query("installation_remarks") final String installation_remarks,
                               @Part("key") RequestBody key,
                               @Part("user_id") RequestBody user_id, @Part("crew_person_id") RequestBody crew_person_id,
-                              @Part("recce_id") RequestBody recce_id,@Part("project_id") RequestBody project_id,
-                              @Part MultipartBody.Part installation_image) {
+                              @Part("recce_id") final RequestBody recce_id, @Part("project_id") final RequestBody project_id,
+                              @Part final MultipartBody.Part installation_image) {
         ApiInterface apiService = ApiClient.getSams().create(ApiInterface.class);
         Call<UploadInstall> call = apiService.getUploadInstall(installation_date,installation_remarks, key,
                 user_id,  crew_person_id, recce_id,project_id,installation_image);
@@ -148,16 +163,39 @@ public class Update_Install extends Activity {
                 }else {
                     Toast.makeText(getBaseContext(),"Notvsuccessful ",Toast.LENGTH_SHORT).show();
                 }
+                updateInstall_Localdb(installation_date,installation_remarks,Preferences.getKey(),Preferences.getUserid(),
+                        Preferences.getCrewpersonid(),getIntent().getStringExtra("recce_id").toString(),
+                        Preferences.getProjectId(),installimage.getAbsolutePath().toString(),"online_update");
             }
 
             @Override
             public void onFailure(Call<UploadInstall> call, Throwable throwable) {
                 Toast.makeText(getBaseContext(), throwable.toString(), Toast.LENGTH_SHORT).show();
+                updateInstall_Localdb(installation_date,installation_remarks,Preferences.getKey(),Preferences.getUserid(),
+                        Preferences.getCrewpersonid(),getIntent().getStringExtra("recce_id").toString(),
+                        Preferences.getProjectId(),installimage.getAbsolutePath().toString(),"offline_update");
+
                 Log.d("message_image",throwable.toString());
             }
         });
     }
 
+
+    public void updateInstall_Localdb(String install_date, String install_remark, String key, String userid, String crewpersonid,
+                                      String recce_id, String project_id, String imagefilepart1,String mode) {
+
+        db = openOrCreateDatabase("SAMS", Context.MODE_PRIVATE, null);
+
+        db.execSQL("UPDATE install SET installation_date='" + install_date + "',installation_remarks='" + install_remark + "',key='" + key + "',userid='" + userid
+                + "',crew_person_id='" + crewpersonid +
+                "',project_id='" + project_id + "',installation_image='" + imagefilepart1 + "',product0='" + mode +"'"+
+                " WHERE recce_id=" + recce_id);
+
+
+
+        db.close();
+        Log.d("success", "successfully updated recce");
+    }
 
     private String getRealPathFromURI(String contentURI) {
         Uri contentUri = Uri.parse(contentURI);
