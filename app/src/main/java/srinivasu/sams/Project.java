@@ -53,7 +53,6 @@ public class Project extends Activity {
     public void getProject_from_local() {
         ArrayList<Projects> project_offline = new ArrayList<Projects>();
         db = openOrCreateDatabase("SAMS", Context.MODE_PRIVATE, null);
-        Toast.makeText(Project.this, "view my db", Toast.LENGTH_SHORT).show();
         //  Cursor c=db.rawQuery("SELECT * FROM recce WHERE recce_id='"+email+"' and resume='"+resumename+"'", null);
        // Cursor c = db.rawQuery("SELECT * FROM project WHERE project_id='" + getIntent().getStringExtra("projectid").toString() + "'", null);
         Cursor c = db.rawQuery("SELECT * FROM project", null);
@@ -68,7 +67,9 @@ public class Project extends Activity {
                 c.moveToNext();
             }
         }
-        project_recyler.setAdapter(new ProjectAdapter(project_offline, R.layout.recee_single, Project.this));
+        project_recyler.setAdapter(new ProjectAdapter(project_offline, R.layout.project_single, Project.this));
+        Toast.makeText(Project.this, "call update project", Toast.LENGTH_SHORT).show();
+       // updateProject_Localdb("6","srinivasu_offline");
     }
 
 
@@ -104,5 +105,9 @@ public class Project extends Activity {
         });
     }
 
+    public void updateProject_Localdb(String project_id, String project_name) {
+        db = openOrCreateDatabase("SAMS", Context.MODE_PRIVATE, null);
+        db.execSQL("UPDATE project SET project_name='" + project_name + "'"+"WHERE project_id="+project_id);
+    }
 
 }

@@ -44,18 +44,17 @@ public class Home extends Activity {
                 Preferences.setSelection("RECCE");
                 Intent i = new Intent(Home.this,Project.class);
                 startActivity(i);
-                Toast.makeText(this, "Button1 clicked!", Toast.LENGTH_SHORT).show();
                 break;
 
             case R.id.Installtion_btn:
                 Preferences.setSelection("INSTALL");
                 Intent instal = new Intent(Home.this,Project.class);
                 startActivity(instal);
-                Toast.makeText(this, "Button2 Clicked!", Toast.LENGTH_SHORT).show();
                 break;
 
             case R.id.Sync_btn:
-                Toast.makeText(this, "Button3 clicked!", Toast.LENGTH_SHORT).show();
+                Intent sync = new Intent(Home.this,Sync.class);
+                startActivity(sync);
                 break;
             case R.id.logout_btn:
                 Toast.makeText(this, "Button3 clicked!", Toast.LENGTH_SHORT).show();

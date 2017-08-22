@@ -161,33 +161,25 @@ public class DBHelper {
     }
 
 
+
     public static void updateRecce_Localdb(String uom_id, String width, String key, String userid, String crewpersonid, String height, String width_feet, String height_feet,
                                            String width_inches, String height_inches, String recce_id, String recce_image,
                                            String recce_image_1, String recce_image_2, String recce_image_3, String recce_image_4,
-                                           String latitude, String longitude, String outlet_address, String project_id) {
-     /*   db.execSQL("INSERT INTO recce VALUES('" + recce_id + "','" + project_id + "','" + product_name + "','" + zone_id + "','" +
-                uom_id + "','" + uom_name + "','" + recce_date + "','" + outlet_name + "','" + outlet_owner_name + "','" + outlet_address
-                + "','" + longitude + "','" + latitude + "','" + width + "','" + height + "','" + width_feet + "','" + height_feet
-                + "','" + width_inches + "','" + height_inches + "','" + recce_image + "','" + recce_image_1 + "','" + recce_image_2 + "','" +
-                recce_image_3 + "','" + recce_image_4 + "','" + product0 + "','" + uoms + "','" + recce_image_upload_status + "');");
-*/
+                                           String latitude, String longitude, String outlet_address, String project_id, String uoms, String status,Context mycontext) {
 
-        Cursor c = db.rawQuery("SELECT * FROM recce WHERE recce_id='" + recce_id + "' and project_id='" + project_id + "'", null);
-        if (c.moveToFirst()) {
-            Toast.makeText(context, "update Recce local data " + recce_id, Toast.LENGTH_SHORT).show();
+        db = mycontext.openOrCreateDatabase("SAMS", Context.MODE_PRIVATE, null);
+        db.execSQL("UPDATE recce SET uom_id='" + uom_id + "',width='" + width + "',key='" + key + "',userid='" + userid
+                + "',crewpersonid='" + crewpersonid +
+                "',height='" + height + "',width_feet='" + width_feet + "',uoms='" + uoms +
+                "',height_feet='" + height_feet + "',width_inches='" + width_inches +
+                "',height_inches='" + height_inches +
+                "',recce_image='" + recce_image + "',recce_image_1='" + recce_image_1 +
+                "',recce_image_2='" + recce_image_2 + "',recce_image_3='" + recce_image_3 +
+                "',recce_image_4='" + recce_image_4 + "',latitude='" + latitude
+                + "',recce_image_upload_status='" + status + "',longitude='" + longitude + "',outlet_address='" + outlet_address + "'" + "WHERE recce_id=" + recce_id);
 
-            db.execSQL("UPDATE recce SET uom_id='" + uom_id + "',width='" + width + "',key='" + key + "',userid='" + userid
-                    + "',crewpersonid='" + crewpersonid +
-                    "',height='" + height + "',width_feet='" + width_feet +
-                    "',height_feet='" + height_feet + "',width_inches='" + width_inches +
-                    "',height_inches='" + height_inches +
-                    "',recce_image='" + recce_image + "',recce_image_1='" + recce_image_1 +
-                    "',recce_image_2='" + recce_image_2 + "',recce_image_3='" + recce_image_3 +
-                    "',recce_image_4='" + recce_image_4 + "',latitude='" + latitude
-                    + "',longitude='" + longitude + "',outlet_address='" + outlet_address + "'");
-        } else {
-            Toast.makeText(context, "failure recce update", Toast.LENGTH_SHORT).show();
-        }
+        Log.d("success", "successfully updated recce");
     }
+
 
 }

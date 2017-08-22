@@ -261,12 +261,6 @@ public class Update_Recce extends Activity {
                     , "22", "22", "2", "2", key, userid, crew_person_id, recce_id, filePart, imageFilePart1,
                     imageFilePart2, imageFilePart3, imageFilePart4, lat, logtitude, address);
 
-            updateRecce_Localdb(uomid, tvRwidth.getText().toString(), tvRheight.getText().toString()
-                    , "22", "22", "2", "2", Preferences.getKey(), Preferences.getUserid(), Preferences.getCrewPersonid_project()
-                    , getIntent().getStringExtra("recce_id").toString(), mainpic.getAbsolutePath().toString(),
-                    otherImagefile1.getAbsolutePath().toString(), otherImagefile2.getAbsolutePath().toString()
-                    , otherImagefile3.getAbsolutePath().toString(), otherImagefile4.getAbsolutePath().toString(),
-                    "20.22", "20.22", "vizag", Preferences.getProjectId());
             Log.d("updateimagereccepath", mainpic.getAbsolutePath().toString());
         }
     }
@@ -399,12 +393,26 @@ public class Update_Recce extends Activity {
                 } else {
                     Toast.makeText(getBaseContext(), "Notvsuccessful ", Toast.LENGTH_SHORT).show();
                 }
+                updateRecce_Localdb(uomid, tvRwidth.getText().toString(), tvRheight.getText().toString()
+                        , "22", "22", "2", "2", Preferences.getKey(), Preferences.getUserid(), Preferences.getCrewPersonid_project()
+                        , getIntent().getStringExtra("recce_id").toString(), iv_urlRC,
+                        otherImagefile1.getAbsolutePath().toString(), otherImagefile2.getAbsolutePath().toString()
+                        , otherImagefile3.getAbsolutePath().toString(), otherImagefile4.getAbsolutePath().toString(),
+                        "20.22", "20.22", "vizag", Preferences.getProjectId(),"online_update","COMPLETED");
+
             }
 
             @Override
             public void onFailure(Call<UploadRecce> call, Throwable throwable) {
                 Toast.makeText(getBaseContext(), throwable.toString(), Toast.LENGTH_SHORT).show();
                 Log.d("message_image", throwable.toString());
+                updateRecce_Localdb(uomid, tvRwidth.getText().toString(), tvRheight.getText().toString()
+                        , "22", "22", "2", "2", Preferences.getKey(), Preferences.getUserid(), Preferences.getCrewPersonid_project()
+                        , getIntent().getStringExtra("recce_id").toString(), iv_urlRC,
+                        otherImagefile1.getAbsolutePath().toString(), otherImagefile2.getAbsolutePath().toString()
+                        , otherImagefile3.getAbsolutePath().toString(), otherImagefile4.getAbsolutePath().toString(),
+                        "20.22", "20.22", "vizag", Preferences.getProjectId(),"offline_update","COMPLETED");
+
             }
         });
     }
@@ -570,34 +578,23 @@ public class Update_Recce extends Activity {
 
     }
 
-    public void
-    updateRecce_Localdb(String uom_id, String width, String key, String userid, String crewpersonid, String height, String width_feet, String height_feet,
-                        String width_inches, String height_inches, String recce_id, String recce_image,
-                        String recce_image_1, String recce_image_2, String recce_image_3, String recce_image_4,
-                        String latitude, String longitude, String outlet_address, String project_id) {
+    public void updateRecce_Localdb(String uom_id, String width, String key, String userid, String crewpersonid, String height, String width_feet, String height_feet,
+                                    String width_inches, String height_inches, String recce_id, String recce_image,
+                                    String recce_image_1, String recce_image_2, String recce_image_3, String recce_image_4,
+                                    String latitude, String longitude, String outlet_address, String project_id, String uoms, String status) {
 
         db = openOrCreateDatabase("SAMS", Context.MODE_PRIVATE, null);
-        Cursor c = db.rawQuery("SELECT * FROM recce WHERE recce_id='" + recce_id + "' and project_id='" + project_id + "'", null);
-        if (c.moveToFirst()) {
-            Toast.makeText(Update_Recce.this, "update Recce local data " + recce_id, Toast.LENGTH_SHORT).show();
-            String rc=c.getString(c.getColumnIndex("recce_id"));
-            String pj=c.getString(c.getColumnIndex("project_id"));
-            String pn=c.getString(c.getColumnIndex("product_name"));
-            Log.d("values",rc+" "+pj+"  "+pn);
-            db.execSQL("UPDATE recce SET uom_id='" + uom_id + "',width='" + width + "',key='" + key + "',userid='" + userid
-                    + "',crewpersonid='" + crewpersonid +
-                    "',height='" + height + "',width_feet='" + width_feet +
-                    "',height_feet='" + height_feet + "',width_inches='" + width_inches +
-                    "',height_inches='" + height_inches +
-                    "',recce_image='" + recce_image + "',recce_image_1='" + recce_image_1 +
-                    "',recce_image_2='" + recce_image_2 + "',recce_image_3='" + recce_image_3 +
-                    "',recce_image_4='" + recce_image_4 + "',latitude='" + latitude
-                    + "',longitude='" + longitude + "',outlet_address='" + outlet_address + "'");
+        db.execSQL("UPDATE recce SET uom_id='" + uom_id + "',width='" + width + "',key='" + key + "',userid='" + userid
+                + "',crewpersonid='" + crewpersonid +
+                "',height='" + height + "',width_feet='" + width_feet + "',uoms='" + uoms +
+                "',height_feet='" + height_feet + "',width_inches='" + width_inches +
+                "',height_inches='" + height_inches +
+                "',recce_image='" + recce_image + "',recce_image_1='" + recce_image_1 +
+                "',recce_image_2='" + recce_image_2 + "',recce_image_3='" + recce_image_3 +
+                "',recce_image_4='" + recce_image_4 + "',latitude='" + latitude
+                + "',recce_image_upload_status='" + status + "',longitude='" + longitude + "',outlet_address='" + outlet_address + "'" + "WHERE recce_id=" + recce_id);
 
-        } else {
-            Toast.makeText(Update_Recce.this, "failure recce update", Toast.LENGTH_SHORT).show();
-        }
-        Log.d("success","successfully updated recce");
+        Log.d("success", "successfully updated recce");
     }
 
 

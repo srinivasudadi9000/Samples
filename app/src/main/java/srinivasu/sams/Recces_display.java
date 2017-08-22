@@ -105,7 +105,6 @@ public class Recces_display extends Activity {
                         outlet_owner_name,outlet_address,longitude,latitude,width,height,width_feet,height_feet,
                         width_inches,height_inches,recce_image,recce_image_1,recce_image_2,recce_image_3,recce_image_4,
                         product0,null,recce_image_upload_status));
-                Toast.makeText(Recces_display.this, " " + name, Toast.LENGTH_SHORT).show();
                 Log.d("values",name);
                 //  list.add(name);
                 c.moveToNext();

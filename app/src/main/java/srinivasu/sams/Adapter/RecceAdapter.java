@@ -59,8 +59,8 @@ public class RecceAdapter extends RecyclerView.Adapter<RecceAdapter.Recceholder>
         Bitmap bmImage = null;
         if (!Validation.internet(context)) {
             BitmapFactory.Options opt = new BitmapFactory.Options();
-            opt.inSampleSize = 8;
-            opt.inMutable = true;
+            //opt.inSampleSize = 8;
+            //opt.inMutable = true;
              bmImage = BitmapFactory.decodeFile(receelist.get(position).getRecce_image().toString(), opt);
             holder.recce_img.setImageBitmap(bmImage);
             /*Uri uri = Uri.parse(receelist.get(position).getRecce_image().toString());
