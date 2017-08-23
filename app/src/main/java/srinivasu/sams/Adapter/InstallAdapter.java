@@ -100,12 +100,34 @@ public class InstallAdapter extends RecyclerView.Adapter<InstallAdapter.Reccehol
                 @Override
                 public void onClick(View v) {
                  //   Toast.makeText(v.getContext(), "install adapter ra babu", Toast.LENGTH_SHORT).show();
+                    String installdate="",installremark="",recce_image="",install_image="";
                     Intent updateinstall = new Intent(context, Update_Install.class);
                     updateinstall.putExtra("recce_id",installations.get(getAdapterPosition()).getRecce_id().toString());
-                    updateinstall.putExtra("recce_image",installations.get(getAdapterPosition()).getRecce_image().toString());
-                    updateinstall.putExtra("install_image",installations.get(getAdapterPosition()).getInstallation_image().toString());
-                    updateinstall.putExtra("install_date",installations.get(getAdapterPosition()).getInstallation_date().toString());
-                    updateinstall.putExtra("install_remark",installations.get(getAdapterPosition()).getInstallation_remarks().toString());
+                    if (installations.get(getAdapterPosition()).getInstallation_date().toString()!=null){
+                        updateinstall.putExtra("install_date",installations.get(getAdapterPosition()).getInstallation_date().toString());
+                    }else {
+                        updateinstall.putExtra("install_date",installdate);
+                    }
+                    if (installations.get(getAdapterPosition()).getInstallation_remarks().toString() !=null){
+                        updateinstall.putExtra("install_remark",installations.get(getAdapterPosition()).getInstallation_remarks().toString());
+
+                    }else {
+                        updateinstall.putExtra("install_remark",installremark);
+
+                    }
+
+                    if (installations.get(getAdapterPosition()).getRecce_image().toString()!=null){
+                        updateinstall.putExtra("recce_image",installations.get(getAdapterPosition()).getRecce_image().toString());
+                    }else {
+                        updateinstall.putExtra("recce_image",recce_image);
+                    }
+
+                    if (installations.get(getAdapterPosition()).getInstallation_image().toString()!=null){
+                        updateinstall.putExtra("install_image",installations.get(getAdapterPosition()).getInstallation_image().toString());
+                    }else {
+                        updateinstall.putExtra("install_image",install_image);
+                    }
+
                     ;
                     itemView.getContext().startActivity(updateinstall);
                 }

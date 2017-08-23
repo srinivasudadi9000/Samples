@@ -110,20 +110,69 @@ return receelist.size();
             recce_img.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
+                    String width="",height="",umoid="",productname="",mainpic="",image1="",image2="",image3="",image4="",address="",
+                            latitude="",longitude="";
                     Intent i = new Intent(context,Update_Recce.class);
                     i.putExtra("recce_id",receelist.get(getAdapterPosition()).getRecce_id().toString());
-                    i.putExtra("width",receelist.get(getAdapterPosition()).getWidth().toString());
-                    i.putExtra("height",receelist.get(getAdapterPosition()).getHeight().toString());
-                    i.putExtra("uomid",receelist.get(getAdapterPosition()).getUom_id().toString());
-                    i.putExtra("productname",receelist.get(getAdapterPosition()).getProduct_name().toString());
-                    i.putExtra("mainpic",receelist.get(getAdapterPosition()).getRecce_image().toString());
-                    i.putExtra("image1",receelist.get(getAdapterPosition()).getRecce_image_1());
-                    i.putExtra("image2",receelist.get(getAdapterPosition()).getRecce_image_2());
-                    i.putExtra("image3",receelist.get(getAdapterPosition()).getRecce_image_3());
-                    i.putExtra("image4",receelist.get(getAdapterPosition()).getRecce_image_4());
-                    i.putExtra("address",receelist.get(getAdapterPosition()).getOutlet_address());
-                    i.putExtra("latitude",receelist.get(getAdapterPosition()).getLatitude());
-                    i.putExtra("longitude",receelist.get(getAdapterPosition()).getLongitude());
+                    if (receelist.get(getAdapterPosition()).getWidth().toString()!=null){
+                        i.putExtra("width",receelist.get(getAdapterPosition()).getWidth().toString());
+                    }else {
+                        i.putExtra("width",width);
+                    }
+                    if (receelist.get(getAdapterPosition()).getHeight().toString() !=null){
+                        i.putExtra("height",receelist.get(getAdapterPosition()).getHeight().toString());
+                    }else {
+                        i.putExtra("height",height);
+                    }
+                    if (receelist.get(getAdapterPosition()).getUom_id().toString() != null){
+                        i.putExtra("uomid",receelist.get(getAdapterPosition()).getUom_id().toString());
+                    }else {
+                        i.putExtra("uomid",umoid);
+                    }
+                    if (receelist.get(getAdapterPosition()).getProduct_name().toString() != null){
+                        i.putExtra("productname",receelist.get(getAdapterPosition()).getProduct_name().toString());
+                    }else {
+                        i.putExtra("productname",productname);
+                    }if (receelist.get(getAdapterPosition()).getRecce_image().toString() != null){
+                        i.putExtra("mainpic",receelist.get(getAdapterPosition()).getRecce_image().toString());
+                    }else {
+                        i.putExtra("mainpic",mainpic);
+                    }
+
+                    if (receelist.get(getAdapterPosition()).getRecce_image_1().toString() != null){
+                        i.putExtra("image1",receelist.get(getAdapterPosition()).getRecce_image_1());
+                    }else {
+                        i.putExtra("image1",image1);
+                    }if (receelist.get(getAdapterPosition()).getRecce_image_2().toString() != null){
+                        i.putExtra("image2",receelist.get(getAdapterPosition()).getRecce_image_2());
+                    }else {
+                        i.putExtra("image2",image2);
+                    }
+                    if (receelist.get(getAdapterPosition()).getRecce_image_3().toString() != null){
+                        i.putExtra("image3",receelist.get(getAdapterPosition()).getRecce_image_3());
+                    }else {
+                        i.putExtra("image3",image3);
+                    }if (receelist.get(getAdapterPosition()).getRecce_image_4().toString() != null){
+                        i.putExtra("image4",receelist.get(getAdapterPosition()).getRecce_image_4());
+                    }else {
+                        i.putExtra("image4",image4);
+                    }
+
+                    if (receelist.get(getAdapterPosition()).getOutlet_address().toString() != null){
+                        i.putExtra("address",receelist.get(getAdapterPosition()).getOutlet_address());
+                    }else {
+                        i.putExtra("address",address);
+                    }if (receelist.get(getAdapterPosition()).getLatitude().toString() != null){
+                        i.putExtra("latitude",receelist.get(getAdapterPosition()).getLatitude());
+                    }else {
+                        i.putExtra("latitude",latitude);
+                    }
+                    if (receelist.get(getAdapterPosition()).getLongitude().toString() != null){
+                        i.putExtra("longitude",receelist.get(getAdapterPosition()).getLongitude());
+                    }else {
+                        i.putExtra("longitude",longitude);
+                    }
                     itemView.getContext().startActivity(i);
                 }
             });
