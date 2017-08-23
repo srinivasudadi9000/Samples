@@ -15,6 +15,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -41,7 +42,7 @@ public class Project extends Activity {
        // project_recyler.setItemAnimator(new DefaultItemAnimator());
         if (!Validation.internet(Project.this)) {
             getProject_from_local();
-            Toast.makeText(getBaseContext(), "local db recces", Toast.LENGTH_LONG).show();
+          //  Toast.makeText(getBaseContext(), "local db recces", Toast.LENGTH_LONG).show();
         } else {
             getProjects(Preferences.getCrewpersonid(), Preferences.getVendorid());
         }
@@ -49,7 +50,10 @@ public class Project extends Activity {
         //Toast.makeText(getBaseContext(),Preferences.getCrewpersonid()+"  "+Preferences.getVendorid(),Toast.LENGTH_LONG).show();
 
     }
-
+     @OnClick(R.id.back)
+     public void back(){
+         finish();
+     }
     public void getProject_from_local() {
         ArrayList<Projects> project_offline = new ArrayList<Projects>();
         db = openOrCreateDatabase("SAMS", Context.MODE_PRIVATE, null);
@@ -68,7 +72,7 @@ public class Project extends Activity {
             }
         }
         project_recyler.setAdapter(new ProjectAdapter(project_offline, R.layout.project_single, Project.this));
-        Toast.makeText(Project.this, "call update project", Toast.LENGTH_SHORT).show();
+       // Toast.makeText(Project.this, "call update project", Toast.LENGTH_SHORT).show();
        // updateProject_Localdb("6","srinivasu_offline");
     }
 

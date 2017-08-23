@@ -59,7 +59,7 @@ public class InstallAdapter extends RecyclerView.Adapter<InstallAdapter.Reccehol
 
         Bitmap bmImage = null;
         if (!Validation.internet(context)) {
-            bmImage = BitmapFactory.decodeFile(installations.get(position).getInstallation_image().toString(), null);
+            bmImage = BitmapFactory.decodeFile(installations.get(position).getRecce_image().toString(), null);
             holder.recce_img.setImageBitmap(bmImage);
 
         } else {

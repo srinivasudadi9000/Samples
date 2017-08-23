@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +41,7 @@ public class Install_display extends Activity {
 
         if (!Validation.internet(Install_display.this)) {
             getInstall_from_local();
-            Toast.makeText(getBaseContext(), "local db recces", Toast.LENGTH_LONG).show();
+           // Toast.makeText(getBaseContext(), "local db recces", Toast.LENGTH_LONG).show();
         } else {
             getInstalllist();
         }
@@ -68,7 +67,7 @@ public class Install_display extends Activity {
 
             @Override
             public void onFailure(Call<GetInstall> call, Throwable throwable) {
-                Toast.makeText(getBaseContext(), throwable.toString(), Toast.LENGTH_SHORT).show();
+              //  Toast.makeText(getBaseContext(), throwable.toString(), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -77,7 +76,7 @@ public class Install_display extends Activity {
     public  void getInstall_from_local() {
         ArrayList<Installation> install_offline = new ArrayList<Installation>();
         db = openOrCreateDatabase("SAMS", Context.MODE_PRIVATE, null);
-        Toast.makeText(Install_display.this, "view my db install data ", Toast.LENGTH_SHORT).show();
+      //  Toast.makeText(Install_display.this, "view my db install data ", Toast.LENGTH_SHORT).show();
         //  Cursor c=db.rawQuery("SELECT * FROM recce WHERE recce_id='"+email+"' and resume='"+resumename+"'", null);
         Cursor c = db.rawQuery("SELECT * FROM install WHERE project_id='"+getIntent().getStringExtra("projectid").toString()+"'", null);
 
@@ -113,7 +112,7 @@ public class Install_display extends Activity {
                         outlet_owner_name,outlet_address,longitude,latitude,recce_image,installation_date,installation_image,
                         installation_remarks, width,height,width_feet,height_feet,
                         width_inches,height_inches,product_name,product0,installation_image_upload_status,null));
-                Toast.makeText(Install_display.this, " " + name, Toast.LENGTH_SHORT).show();
+              //  Toast.makeText(Install_display.this, " " + name, Toast.LENGTH_SHORT).show();
                 Log.d("values",name);
                 //  list.add(name);
                 c.moveToNext();

@@ -21,8 +21,12 @@ import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.squareup.picasso.MemoryPolicy;
@@ -45,16 +49,26 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.http.Part;
 import retrofit2.http.Query;
+import srinivasu.sams.helper.Calulations;
 import srinivasu.sams.helper.Preferences;
 import srinivasu.sams.model.UploadRecce;
 import srinivasu.sams.rest.ApiClient;
 import srinivasu.sams.rest.ApiInterface;
+import srinivasu.sams.validation.Validation;
 
 public class Update_Recce extends Activity {
     @BindView(R.id.tvRwidth)
     EditText tvRwidth;
     @BindView(R.id.tvRheight)
     EditText tvRheight;
+    @BindView(R.id.tvRwf)
+    EditText tvRwf;
+    @BindView(R.id.tvRwi)
+    EditText tvRwi;
+    @BindView(R.id.tvRhf)
+    EditText tvRhf;
+    @BindView(R.id.tvRhi)
+    EditText tvRhi;
     @BindView(R.id.ivRecceImage)
     ImageView ivRecceImage;
     @BindView(R.id.ivOtherImage1)
@@ -65,22 +79,26 @@ public class Update_Recce extends Activity {
     ImageView ivOtherImage3;
     @BindView(R.id.ivOtherImage4)
     ImageView ivOtherImage4;
+    @BindView(R.id.spnOums)
+    Spinner spnOums;
     String iv_urlRC = null;
     Bitmap bmImage_main = null;
     String width, height, uomid, productname;
-    String mainpic, image1, image2, image3, image4;
+    String mainpic, image1, image2, image3, image4,address,latitude,longitude,width_feet,height_feet,width_inch,height_inch;
     File file;
     public int R_IMAGE = 2, O_IMAGE1 = 3, O_IMAGE2 = 4, O_IMAGE3 = 5, O_IMAGE4 = 6;
     protected Uri iv_url1 = null, iv_url2 = null, iv_url3 = null, iv_url4 = null;
     File otherImagefile1 = null, otherImagefile2 = null, otherImagefile3 = null, otherImagefile4 = null, RimgFile = null;
     String compress_image4 = null, compress_image3 = null, compress_image2 = null, compress_1 = null;
     SQLiteDatabase db;
+    ArrayAdapter<String> uomsadapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.update__recce);
         ButterKnife.bind(this);
+        spnOums = (Spinner) findViewById(R.id.spnOums);
 
         if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(Update_Recce.this, new String[]{Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_PHONE_STATE, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 1257);
@@ -94,6 +112,9 @@ public class Update_Recce extends Activity {
         image2 = getIntent().getStringExtra("image2");
         image3 = getIntent().getStringExtra("image3");
         image4 = getIntent().getStringExtra("image4");
+        address = getIntent().getStringExtra("address");
+        latitude = getIntent().getStringExtra("latitude");
+        longitude = getIntent().getStringExtra("longitude");
         otherImagefile1 = new File(getExternalCacheDir(), "noimage.png");
         otherImagefile2 = new File(getExternalCacheDir(), "noimage.png");
         otherImagefile3 = new File(getExternalCacheDir(), "noimage.png");
@@ -107,55 +128,143 @@ public class Update_Recce extends Activity {
                 e.printStackTrace();
             }
         }
+        spnOums.setSelection(Integer.parseInt(uomid));
+        spnOums.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
 
+                if (!tvRwidth.getText().toString().isEmpty() && !tvRheight.getText().toString().isEmpty()) {
 
+                    switch (i) {
+                        case 0:
+                            Toast.makeText(Update_Recce.this, "Please Select type of uom", Toast.LENGTH_SHORT).show();
+                            break;
+                        case 1:
+                            uomid="1";
+                            tvRhi.setText(String.valueOf(Calulations.mm_feet_to_inches(Double.parseDouble(tvRheight.getText().toString()))));   //set height
+                            tvRwi.setText(String.valueOf(Calulations.mm_feet_to_inches(Double.parseDouble(tvRwidth.getText().toString()))));     //set widht inches
+                            tvRhf.setText(String.valueOf(Calulations.mm_to_feet(Double.parseDouble(tvRheight.getText().toString()))));   //set height
+                            tvRwf.setText(String.valueOf(Calulations.mm_to_feet(Double.parseDouble(tvRwidth.getText().toString()))));//set widht inches
+                            break;
+                        case 2:
+                            uomid="2";
+                            tvRhi.setText(String.valueOf(Calulations.mm_cm_m_feet_to_inches(Double.parseDouble(tvRheight.getText().toString()))));   //set height
+                            tvRwi.setText(String.valueOf(Calulations.mm_cm_m_feet_to_inches(Double.parseDouble(tvRwidth.getText().toString()))));     //set widht inches
+
+                            tvRhf.setText(String.valueOf(Calulations.cm_to_feet(Double.parseDouble(tvRheight.getText().toString()))));   //set height
+                            tvRwf.setText(String.valueOf(Calulations.cm_to_feet(Double.parseDouble(tvRwidth.getText().toString()))));//set widht inches
+                            break;
+                        case 3:
+                            uomid="3";
+                            tvRhi.setText(String.valueOf(Calulations.inch_to_inches(Double.parseDouble(tvRheight.getText().toString()))));   //set height
+                            tvRwi.setText(String.valueOf(Calulations.inch_to_inches(Double.parseDouble(tvRwidth.getText().toString()))));     //set widht inches
+                            tvRhf.setText(String.valueOf(Calulations.inch_to_feets(Double.parseDouble(tvRheight.getText().toString()))));   //set height
+                            tvRwf.setText(String.valueOf(Calulations.inch_to_feets(Double.parseDouble(tvRwidth.getText().toString()))));//set widht inches
+                            break;
+                        case 4:
+                            uomid="4";
+                            tvRhi.setText(String.valueOf(Calulations.m_feet_to_inches(Double.parseDouble(tvRheight.getText().toString()))));   //set height
+                            tvRwi.setText(String.valueOf(Calulations.m_feet_to_inches(Double.parseDouble(tvRwidth.getText().toString()))));     //set widht inches
+                            tvRhf.setText(String.valueOf(Calulations.m_to_feets(Double.parseDouble(tvRheight.getText().toString()))));   //set height
+                            tvRwf.setText(String.valueOf(Calulations.m_to_feets(Double.parseDouble(tvRwidth.getText().toString()))));//set widht inches
+                            break;
+                        case 5:
+                            uomid="5";
+                            tvRhi.setText(String.valueOf(Calulations.feet_to_inches(Double.parseDouble(tvRheight.getText().toString()))));   //set height
+                            tvRwi.setText(String.valueOf(Calulations.feet_to_inches(Double.parseDouble(tvRwidth.getText().toString()))));     //set widht inches
+                            tvRhf.setText(String.valueOf(Calulations.feet_to_feet(Double.parseDouble(tvRheight.getText().toString()))));   //set height
+                            tvRwf.setText(String.valueOf(Calulations.feet_to_feet(Double.parseDouble(tvRwidth.getText().toString()))));//set widht inches
+                            break;
+                        case 6:
+                            uomid="6";
+                            tvRhi.setText("0");   //set height
+                            tvRwi.setText("0");     //set widht inches
+                            tvRhf.setText("0");   //set height
+                            tvRwf.setText("0");//set widht inches
+                            break;
+
+                    }
+
+                } else {
+                    Toast.makeText(Update_Recce.this, "Please add image!!", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+    }
+
+    @OnClick(R.id.back_update)
+    public void back() {
+        finish();
     }
 
     public void displayimages() {
         tvRwidth.setText(width);
         tvRheight.setText(height);
-        Picasso.with(Update_Recce.this)
-                .load("http://128.199.131.14/samsdev/web/image_uploads/recce_uploads/" + mainpic)
-                .memoryPolicy(MemoryPolicy.NO_CACHE)
-                .networkPolicy(NetworkPolicy.NO_CACHE)
-                .resize(512, 512)
-                .error(R.drawable.dummy)
-                .noFade()
-                .into(ivRecceImage);
-        Picasso.with(Update_Recce.this)
-                .load("http://128.199.131.14/samsdev/web/image_uploads/recce_images_1_uploads/" + image1)
-                .memoryPolicy(MemoryPolicy.NO_CACHE)
-                .networkPolicy(NetworkPolicy.NO_CACHE)
-                .resize(512, 512)
-                .error(R.drawable.dummy)
-                .noFade()
-                .into(ivOtherImage1);
+        Bitmap bmImage = null;
+        if (!Validation.internet(Update_Recce.this)) {
+            bmImage = BitmapFactory.decodeFile(mainpic.toString(), null);
+            ivRecceImage.setImageBitmap(bmImage);
+            bmImage = BitmapFactory.decodeFile(image1.toString(), null);
+            ivOtherImage1.setImageBitmap(bmImage);
+            bmImage = BitmapFactory.decodeFile(image2.toString(), null);
+            ivOtherImage2.setImageBitmap(bmImage);
+            bmImage = BitmapFactory.decodeFile(image3.toString(), null);
+            ivOtherImage3.setImageBitmap(bmImage);
+            bmImage = BitmapFactory.decodeFile(image4.toString(), null);
+            ivOtherImage4.setImageBitmap(bmImage);
 
-        Picasso.with(Update_Recce.this)
-                .load("http://128.199.131.14/samsdev/web/image_uploads/recce_images_2_uploads/" + image2)
-                .memoryPolicy(MemoryPolicy.NO_CACHE)
-                .networkPolicy(NetworkPolicy.NO_CACHE)
-                .resize(512, 512)
-                .error(R.drawable.dummy)
-                .noFade()
-                .into(ivOtherImage2);
+        } else {
+            Picasso.with(Update_Recce.this)
+                    .load("http://128.199.131.14/samsdev/web/image_uploads/recce_uploads/" + mainpic)
+                    .memoryPolicy(MemoryPolicy.NO_CACHE)
+                    .networkPolicy(NetworkPolicy.NO_CACHE)
+                    .resize(512, 512)
+                    .error(R.drawable.dummy)
+                    .noFade()
+                    .into(ivRecceImage);
+            Picasso.with(Update_Recce.this)
+                    .load("http://128.199.131.14/samsdev/web/image_uploads/recce_images_1_uploads/" + image1)
+                    .memoryPolicy(MemoryPolicy.NO_CACHE)
+                    .networkPolicy(NetworkPolicy.NO_CACHE)
+                    .resize(512, 512)
+                    .error(R.drawable.dummy)
+                    .noFade()
+                    .into(ivOtherImage1);
 
-        Picasso.with(Update_Recce.this)
-                .load("http://128.199.131.14/samsdev/web/image_uploads/recce_images_3_uploads/" + image3)
-                .memoryPolicy(MemoryPolicy.NO_CACHE)
-                .networkPolicy(NetworkPolicy.NO_CACHE)
-                .resize(512, 512)
-                .error(R.drawable.dummy)
-                .noFade()
-                .into(ivOtherImage3);
-        Picasso.with(Update_Recce.this)
-                .load("http://128.199.131.14/samsdev/web/image_uploads/recce_images_4_uploads/" + image4)
-                .memoryPolicy(MemoryPolicy.NO_CACHE)
-                .networkPolicy(NetworkPolicy.NO_CACHE)
-                .resize(512, 512)
-                .error(R.drawable.dummy)
-                .noFade()
-                .into(ivOtherImage4);
+            Picasso.with(Update_Recce.this)
+                    .load("http://128.199.131.14/samsdev/web/image_uploads/recce_images_2_uploads/" + image2)
+                    .memoryPolicy(MemoryPolicy.NO_CACHE)
+                    .networkPolicy(NetworkPolicy.NO_CACHE)
+                    .resize(512, 512)
+                    .error(R.drawable.dummy)
+                    .noFade()
+                    .into(ivOtherImage2);
+
+            Picasso.with(Update_Recce.this)
+                    .load("http://128.199.131.14/samsdev/web/image_uploads/recce_images_3_uploads/" + image3)
+                    .memoryPolicy(MemoryPolicy.NO_CACHE)
+                    .networkPolicy(NetworkPolicy.NO_CACHE)
+                    .resize(512, 512)
+                    .error(R.drawable.dummy)
+                    .noFade()
+                    .into(ivOtherImage3);
+            Picasso.with(Update_Recce.this)
+                    .load("http://128.199.131.14/samsdev/web/image_uploads/recce_images_4_uploads/" + image4)
+                    .memoryPolicy(MemoryPolicy.NO_CACHE)
+                    .networkPolicy(NetworkPolicy.NO_CACHE)
+                    .resize(512, 512)
+                    .error(R.drawable.dummy)
+                    .noFade()
+                    .into(ivOtherImage4);
+
+        }
 
     }
 
@@ -241,6 +350,12 @@ public class Update_Recce extends Activity {
         } else if (iv_url1 == null) {
             Toast.makeText(getBaseContext(), "please fill all details", Toast.LENGTH_SHORT).show();
         } else {
+            width = tvRwidth.getText().toString();
+            height = tvRheight.getText().toString();
+            width_feet=tvRwf.getText().toString();
+            height_feet=tvRhf.getText().toString();
+            width_inch=tvRwi.getText().toString();
+            height_inch= tvRhi.getText().toString();
 
             File mainpic = new File(iv_urlRC.toString());
             compressImage(mainpic.getAbsolutePath().toString());
@@ -254,12 +369,13 @@ public class Update_Recce extends Activity {
                     RequestBody.create(MediaType.parse("image/*"), otherImagefile3));
             MultipartBody.Part imageFilePart4 = MultipartBody.Part.createFormData("recce_image_4", otherImagefile4.getName(),
                     RequestBody.create(MediaType.parse("image/*"), otherImagefile4));
-            RequestBody lat = RequestBody.create(MediaType.parse("text/plain"), "20.22");
-            RequestBody logtitude = RequestBody.create(MediaType.parse("text/plain"), "22.33");
-            RequestBody address = RequestBody.create(MediaType.parse("text/plain"), "vizag");
-            uploadRecce(uomid, tvRwidth.getText().toString(), tvRheight.getText().toString()
-                    , "22", "22", "2", "2", key, userid, crew_person_id, recce_id, filePart, imageFilePart1,
-                    imageFilePart2, imageFilePart3, imageFilePart4, lat, logtitude, address);
+            RequestBody lat = RequestBody.create(MediaType.parse("text/plain"), latitude);
+            RequestBody log = RequestBody.create(MediaType.parse("text/plain"), longitude);
+            RequestBody address_s = RequestBody.create(MediaType.parse("text/plain"), address);
+            uploadRecce(uomid, width, height
+                    , width_feet, height_feet, width_inch
+                    ,height_inch, key, userid, crew_person_id, recce_id, filePart, imageFilePart1,
+                    imageFilePart2, imageFilePart3, imageFilePart4, lat, log, address_s);
 
             Log.d("updateimagereccepath", mainpic.getAbsolutePath().toString());
         }
@@ -373,12 +489,12 @@ public class Update_Recce extends Activity {
                             @Part MultipartBody.Part recce_image_2,
                             @Part MultipartBody.Part recce_image_3,
                             @Part MultipartBody.Part recce_image_4,
-                            @Part("latitude") RequestBody latitude,
-                            @Part("longitude") RequestBody longitude, @Part("outlet_address") RequestBody outlet_address) {
+                            @Part("latitude") final RequestBody lat,
+                            @Part("longitude") RequestBody longi, @Part("outlet_address") RequestBody outlet_address) {
         ApiInterface apiService = ApiClient.getSams().create(ApiInterface.class);
         Call<UploadRecce> call = apiService.getUploadRecce(uom_id, width, height, w_f, h_f, w_i, h_i, key,
                 user_id, crew_person_id, recce_id, recce_image, recce_image_1, recce_image_2, recce_image_3, recce_image_4,
-                latitude, longitude, outlet_address);
+                lat, longi, outlet_address);
         call.enqueue(new Callback<UploadRecce>() {
             @Override
             public void onResponse(Call<UploadRecce> call, Response<UploadRecce> response) {
@@ -398,7 +514,7 @@ public class Update_Recce extends Activity {
                         , getIntent().getStringExtra("recce_id").toString(), iv_urlRC,
                         otherImagefile1.getAbsolutePath().toString(), otherImagefile2.getAbsolutePath().toString()
                         , otherImagefile3.getAbsolutePath().toString(), otherImagefile4.getAbsolutePath().toString(),
-                        "20.22", "20.22", "vizag", Preferences.getProjectId(),"online_update","COMPLETED");
+                        latitude, longitude, address, Preferences.getProjectId(), "online_update", "COMPLETED");
 
             }
 
@@ -411,7 +527,7 @@ public class Update_Recce extends Activity {
                         , getIntent().getStringExtra("recce_id").toString(), iv_urlRC,
                         otherImagefile1.getAbsolutePath().toString(), otherImagefile2.getAbsolutePath().toString()
                         , otherImagefile3.getAbsolutePath().toString(), otherImagefile4.getAbsolutePath().toString(),
-                        "20.22", "20.22", "vizag", Preferences.getProjectId(),"offline_update","COMPLETED");
+                        "20.22", "20.22", "vizag", Preferences.getProjectId(), "offline_update", "COMPLETED");
 
             }
         });

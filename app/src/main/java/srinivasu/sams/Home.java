@@ -57,7 +57,6 @@ public class Home extends Activity {
                 startActivity(sync);
                 break;
             case R.id.logout_btn:
-                Toast.makeText(this, "Button3 clicked!", Toast.LENGTH_SHORT).show();
                 break;
 
         }

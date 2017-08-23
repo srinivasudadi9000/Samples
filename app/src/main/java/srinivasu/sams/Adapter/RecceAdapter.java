@@ -63,16 +63,7 @@ public class RecceAdapter extends RecyclerView.Adapter<RecceAdapter.Recceholder>
             //opt.inMutable = true;
              bmImage = BitmapFactory.decodeFile(receelist.get(position).getRecce_image().toString(), opt);
             holder.recce_img.setImageBitmap(bmImage);
-            /*Uri uri = Uri.parse(receelist.get(position).getRecce_image().toString());
-            Picasso.with(context)
-                    .load(String.valueOf(bmImage))
-                    .memoryPolicy(MemoryPolicy.NO_CACHE )
-                    .networkPolicy(NetworkPolicy.NO_CACHE)
-                    .resize(512, 512)
-                    .error(R.drawable.dummy)
-                    .noFade()
-                    .into(holder.recce_img);
-            */Log.d("imagepath",receelist.get(position).getRecce_id().toString()+" " +receelist.get(position).getRecce_image().toString());
+           Log.d("imagepath",receelist.get(position).getRecce_id().toString()+" " +receelist.get(position).getRecce_image().toString());
             //Toast.makeText(getBaseContext(), "local db recces", Toast.LENGTH_LONG).show();
         } else {
             Picasso.with(context)
@@ -130,6 +121,9 @@ return receelist.size();
                     i.putExtra("image2",receelist.get(getAdapterPosition()).getRecce_image_2());
                     i.putExtra("image3",receelist.get(getAdapterPosition()).getRecce_image_3());
                     i.putExtra("image4",receelist.get(getAdapterPosition()).getRecce_image_4());
+                    i.putExtra("address",receelist.get(getAdapterPosition()).getOutlet_address());
+                    i.putExtra("latitude",receelist.get(getAdapterPosition()).getLatitude());
+                    i.putExtra("longitude",receelist.get(getAdapterPosition()).getLongitude());
                     itemView.getContext().startActivity(i);
                 }
             });

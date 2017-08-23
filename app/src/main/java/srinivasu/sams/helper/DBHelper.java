@@ -4,7 +4,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
-import android.widget.Toast;
 
 import java.util.List;
 
@@ -25,7 +24,7 @@ public class DBHelper {
         db = context.openOrCreateDatabase("SAMS", Context.MODE_PRIVATE, null);
         db.execSQL("CREATE TABLE IF NOT EXISTS project(project_id VARCHAR unique,project_name VARCHAR);");
         String size = String.valueOf(projects.size());
-        Toast.makeText(context.getApplicationContext(), size, Toast.LENGTH_SHORT).show();
+       // Toast.makeText(context.getApplicationContext(), size, Toast.LENGTH_SHORT).show();
         for (int i = 0; i < projects.size(); i++) {
             if (validaterecord(projects.get(i).getProject_id(), "project").equals("notvalidate")) {
                 Log.d("projects",projects.get(i).getProject_id().toString());
@@ -54,7 +53,7 @@ public class DBHelper {
                 "recce_image_3 VARCHAR,recce_image_4 VARCHAR," +
                 "product0 VARCHAR,uoms VARCHAR,recce_image_upload_status VARCHAR);");
         String size = String.valueOf(recces.size());
-        Toast.makeText(context.getApplicationContext(), size, Toast.LENGTH_SHORT).show();
+       // Toast.makeText(context.getApplicationContext(), size, Toast.LENGTH_SHORT).show();
         for (int i = 0; i < recces.size(); i++) {
             ;
             if (validaterecord(recces.get(i).getRecce_id(), "recce").equals("notvalidate")) {
@@ -87,7 +86,7 @@ public class DBHelper {
                 "height_inches VARCHAR,product_name VARCHAR,product0 VARCHAR,installation_image_upload_status VARCHAR," +
                 "recce_image_path VARCHAR,key VARCHAR,userid VARCHAR);");
         String size = String.valueOf(installations.size());
-        Toast.makeText(context.getApplicationContext(), size, Toast.LENGTH_SHORT).show();
+       // Toast.makeText(context.getApplicationContext(), size, Toast.LENGTH_SHORT).show();
         for (int i = 0; i < installations.size(); i++) {
             ;
             if (validaterecord(installations.get(i).getRecce_id(), "install").equals("notvalidate")) {

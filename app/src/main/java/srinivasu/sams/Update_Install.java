@@ -59,8 +59,8 @@ public class Update_Install extends Activity {
         setContentView(R.layout.update__install);
         ButterKnife.bind(this);
 
-        InstallationDate_et.setText(getIntent().getStringExtra("install_date"));
-        InstallationRemarks_et.setText(getIntent().getStringExtra("install_remark"));
+        InstallationDate_et.setText(getIntent().getStringExtra("install_date").toString());
+        InstallationRemarks_et.setText(getIntent().getStringExtra("install_remark").toString());
 
         Bitmap bmImage = null;
         if (!Validation.internet(Update_Install.this)) {
@@ -86,9 +86,8 @@ public class Update_Install extends Activity {
                     .noFade()
                     .into(recceInstallImage);
         }
-
-
     }
+
     @OnClick(R.id.update_install_btn)
     public void updateInstallrecce(){
 
@@ -111,6 +110,10 @@ public class Update_Install extends Activity {
             Toast.makeText(getBaseContext(),"please fill all the details",Toast.LENGTH_SHORT).show();
         }
         //updateInstall("21-2-2017","asdfasdf",key,userid,crew_person_id,recce_id,project_id,imageFilePart1);
+    }
+    @OnClick(R.id.mybutton_click)
+    public void backme(){
+        finish();
     }
     @OnClick(R.id.recceInstallImage)
     public void installImage_new(){
@@ -155,14 +158,14 @@ public class Update_Install extends Activity {
             @Override
             public void onResponse(Call<UploadInstall> call, Response<UploadInstall> response) {
                 String hello = String.valueOf(response.body().getCrew_person_name());
-                Toast.makeText(getBaseContext(),hello,Toast.LENGTH_SHORT).show();
+               // Toast.makeText(getBaseContext(),hello,Toast.LENGTH_SHORT).show();
 
-                if (response.isSuccessful()){
+               /* if (response.isSuccessful()){
                     Toast.makeText(getBaseContext(),"successfull ",Toast.LENGTH_SHORT).show();
                     finish();
                 }else {
                     Toast.makeText(getBaseContext(),"Notvsuccessful ",Toast.LENGTH_SHORT).show();
-                }
+                }*/
                 updateInstall_Localdb(installation_date,installation_remarks,Preferences.getKey(),Preferences.getUserid(),
                         Preferences.getCrewpersonid(),getIntent().getStringExtra("recce_id").toString(),
                         Preferences.getProjectId(),installimage.getAbsolutePath().toString(),"online_update");
@@ -170,7 +173,7 @@ public class Update_Install extends Activity {
 
             @Override
             public void onFailure(Call<UploadInstall> call, Throwable throwable) {
-                Toast.makeText(getBaseContext(), throwable.toString(), Toast.LENGTH_SHORT).show();
+              //  Toast.makeText(getBaseContext(), throwable.toString(), Toast.LENGTH_SHORT).show();
                 updateInstall_Localdb(installation_date,installation_remarks,Preferences.getKey(),Preferences.getUserid(),
                         Preferences.getCrewpersonid(),getIntent().getStringExtra("recce_id").toString(),
                         Preferences.getProjectId(),installimage.getAbsolutePath().toString(),"offline_update");
