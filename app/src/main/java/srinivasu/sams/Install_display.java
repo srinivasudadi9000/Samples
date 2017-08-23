@@ -55,7 +55,7 @@ public class Install_display extends Activity {
     public void getInstalllist() {
         ApiInterface apiService = ApiClient.getSams().create(ApiInterface.class);
         Call<GetInstall> call = apiService.getInstall(Preferences.getKey(), Preferences.getUserid(),
-                getIntent().getStringExtra("projectid"), Preferences.getCrewpersonid());
+                Preferences.getProjectId().toString(), Preferences.getCrewpersonid());
         call.enqueue(new Callback<GetInstall>() {
             @Override
             public void onResponse(Call<GetInstall> call, Response<GetInstall> response) {
@@ -78,7 +78,7 @@ public class Install_display extends Activity {
         db = openOrCreateDatabase("SAMS", Context.MODE_PRIVATE, null);
       //  Toast.makeText(Install_display.this, "view my db install data ", Toast.LENGTH_SHORT).show();
         //  Cursor c=db.rawQuery("SELECT * FROM recce WHERE recce_id='"+email+"' and resume='"+resumename+"'", null);
-        Cursor c = db.rawQuery("SELECT * FROM install WHERE project_id='"+getIntent().getStringExtra("projectid").toString()+"'", null);
+        Cursor c = db.rawQuery("SELECT * FROM install WHERE project_id='"+Preferences.getProjectId().toString()+"'", null);
 
         if (c.moveToFirst()) {
             while (!c.isAfterLast()) {

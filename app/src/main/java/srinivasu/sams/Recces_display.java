@@ -49,7 +49,8 @@ public class Recces_display extends Activity {
         Log.d("key", Preferences.getKey());
         Log.d("userid", Preferences.getUserid());
         Log.d("crewpersionid", Preferences.getCrewPersonid_project());
-        Log.d("projectid", getIntent().getStringExtra("projectid").toString());
+       // Log.d("projectid", getIntent().getStringExtra("projectid").toString());
+        Log.d("projectid", Preferences.getProjectId().toString());
 
        //
         if (!Validation.internet(Recces_display.this)) {
@@ -61,6 +62,8 @@ public class Recces_display extends Activity {
 
     }
 
+
+
     @OnClick(R.id.back)
     public void back() {
         finish();
@@ -70,7 +73,7 @@ public class Recces_display extends Activity {
         db = openOrCreateDatabase("SAMS", Context.MODE_PRIVATE, null);
         Toast.makeText(Recces_display.this, "view my db", Toast.LENGTH_SHORT).show();
         //  Cursor c=db.rawQuery("SELECT * FROM recce WHERE recce_id='"+email+"' and resume='"+resumename+"'", null);
-        Cursor c = db.rawQuery("SELECT * FROM recce WHERE project_id='"+getIntent().getStringExtra("projectid").toString()+"'", null);
+        Cursor c = db.rawQuery("SELECT * FROM recce WHERE project_id='"+Preferences.getProjectId().toString()+"'", null);
 
         if (c.moveToFirst()) {
             while (!c.isAfterLast()) {
@@ -116,7 +119,7 @@ public class Recces_display extends Activity {
     public void getRecceslist() {
         ApiInterface apiService = ApiClient.getSams().create(ApiInterface.class);
         Call<GetRecce> call = apiService.getRecces(Preferences.getKey(), Preferences.getUserid(),
-                getIntent().getStringExtra("projectid").toString(), Preferences.getCrewPersonid_project());
+                Preferences.getProjectId().toString(), Preferences.getCrewPersonid_project());
         // Call<GetRecce> call = apiService.getRecces("vwqoBF2z3p6k5yCMsoSF3hlI1wisRecY", "50", getIntent().getStringExtra("projectid"), "33");
         //   Call<GetRecce> call = apiService.getRecces("vwqoBF2z3p6k5yCMsoSF3hlI1wisRecY", "50", getIntent().getStringExtra("projectid"), "33");
         call.enqueue(new Callback<GetRecce>() {

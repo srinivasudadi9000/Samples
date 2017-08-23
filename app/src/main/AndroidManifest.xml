@@ -39,7 +39,7 @@
         <activity android:name=".CanvasEdit" />
         <activity android:name=".Update_Recce" />
         <activity android:name=".Update_Install" />
-        <activity android:name=".Sync"></activity>
+        <activity android:name=".Sync" />
     </application>
 
 </manifest>

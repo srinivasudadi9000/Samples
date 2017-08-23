@@ -1,5 +1,6 @@
 package srinivasu.sams.Adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -174,6 +175,7 @@ return receelist.size();
                         i.putExtra("longitude",longitude);
                     }
                     itemView.getContext().startActivity(i);
+                    ((Activity)itemView.getContext()).finish();
                 }
             });
 

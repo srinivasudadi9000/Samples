@@ -113,6 +113,8 @@ public class Update_Install extends Activity {
     }
     @OnClick(R.id.mybutton_click)
     public void backme(){
+        Intent project= new Intent(Update_Install.this,Install_display.class);
+        startActivity(project);
         finish();
     }
     @OnClick(R.id.recceInstallImage)

@@ -201,6 +201,8 @@ public class Update_Recce extends Activity {
 
     @OnClick(R.id.back_update)
     public void back() {
+        Intent project= new Intent(Update_Recce.this,Recces_display.class);
+        startActivity(project);
         finish();
     }
 

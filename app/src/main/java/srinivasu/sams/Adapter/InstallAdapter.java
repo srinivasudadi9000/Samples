@@ -1,5 +1,6 @@
 package srinivasu.sams.Adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -59,7 +60,7 @@ public class InstallAdapter extends RecyclerView.Adapter<InstallAdapter.Reccehol
 
         Bitmap bmImage = null;
         if (!Validation.internet(context)) {
-            bmImage = BitmapFactory.decodeFile(installations.get(position).getRecce_image().toString(), null);
+            bmImage = BitmapFactory.decodeFile(installations.get(position).getInstallation_image().toString(), null);
             holder.recce_img.setImageBitmap(bmImage);
 
         } else {
@@ -130,6 +131,7 @@ public class InstallAdapter extends RecyclerView.Adapter<InstallAdapter.Reccehol
 
                     ;
                     itemView.getContext().startActivity(updateinstall);
+                    ((Activity)itemView.getContext()).finish();
                 }
             });
 

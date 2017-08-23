@@ -59,12 +59,18 @@ public class ProjectAdapter extends RecyclerView.Adapter<ProjectAdapter.Projecth
                     Preferences.setProjectId(projectsList.get(getAdapterPosition()).getProject_id().toString());
                     if (Preferences.getSelection().equals("RECCE")){
                         Intent recce_display = new Intent(context,Recces_display.class);
+                        Preferences.setProjectId(projectsList.get(getAdapterPosition()).getProject_id().toString());
                         recce_display.putExtra("projectid",projectsList.get(getAdapterPosition()).getProject_id().toString());
                         itemView.getContext().startActivity(recce_display);
+
+
+
                     }else {
                         Intent install_display = new Intent(context,Install_display.class);
+                        Preferences.setProjectId(projectsList.get(getAdapterPosition()).getProject_id().toString());
                         install_display.putExtra("projectid",projectsList.get(getAdapterPosition()).getProject_id().toString());
                         itemView.getContext().startActivity(install_display);
+
                     }
 
                 }
