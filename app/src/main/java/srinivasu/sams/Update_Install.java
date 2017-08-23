@@ -199,6 +199,7 @@ public class Update_Install extends Activity {
 
 
         db.close();
+        finish();
         Log.d("success", "successfully updated recce");
     }
 
