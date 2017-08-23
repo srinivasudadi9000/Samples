@@ -40,6 +40,7 @@
         <activity android:name=".Update_Recce" />
         <activity android:name=".Update_Install" />
         <activity android:name=".Sync" />
+        <activity android:name=".Product"></activity>
     </application>
 
 </manifest>
