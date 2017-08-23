@@ -11,6 +11,7 @@ import retrofit2.http.Part;
 import retrofit2.http.Query;
 import srinivasu.sams.model.Appopen;
 import srinivasu.sams.model.GetInstall;
+import srinivasu.sams.model.GetProducts;
 import srinivasu.sams.model.GetRecce;
 import srinivasu.sams.model.Login_Service;
 import srinivasu.sams.model.UploadInstall;
@@ -41,7 +42,11 @@ public interface ApiInterface {
                                 @Field("project_id") String project_id, @Field("crew_person_id") String crew_person_id
     );
 
-
+    @FormUrlEncoded
+    @POST("index.php?r=restapi/user/get-products-list")
+    Call<GetProducts> getProduct(@Field("key") String key, @Field("user_id") String user_id,
+                                 @Field("project_id") String project_id, @Field("crew_person_id") String crew_person_id
+    );
 
     @Multipart
     @POST("index.php?r=restapi/user/upload-recce-image")

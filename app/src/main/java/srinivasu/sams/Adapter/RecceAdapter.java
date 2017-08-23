@@ -19,6 +19,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import srinivasu.sams.Product_Display;
 import srinivasu.sams.R;
 import srinivasu.sams.Update_Recce;
 import srinivasu.sams.model.Recce;
@@ -107,7 +108,13 @@ return receelist.size();
             recce_status_tv  = (TextView)itemView.findViewById(R.id.recce_status_tv);
             recce_edit_tv  = (TextView)itemView.findViewById(R.id.recce_edit_tv);
             recce_img = (ImageView)itemView.findViewById(R.id.recce_img);
-
+            recce_edit_tv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent product  =  new Intent(context, Product_Display.class);
+                    itemView.getContext().startActivity(product);
+                }
+            });
             recce_img.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
