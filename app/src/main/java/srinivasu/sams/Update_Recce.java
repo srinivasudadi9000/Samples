@@ -115,6 +115,7 @@ public class Update_Recce extends Activity {
         address = getIntent().getStringExtra("address");
         latitude = getIntent().getStringExtra("latitude");
         longitude = getIntent().getStringExtra("longitude");
+        Toast.makeText(getBaseContext(),latitude+" "+longitude,Toast.LENGTH_SHORT).show();
         otherImagefile1 = new File(getExternalCacheDir(), "noimage.png");
         otherImagefile2 = new File(getExternalCacheDir(), "noimage.png");
         otherImagefile3 = new File(getExternalCacheDir(), "noimage.png");
@@ -211,20 +212,50 @@ public class Update_Recce extends Activity {
         tvRheight.setText(height);
         Bitmap bmImage = null;
         if (!Validation.internet(Update_Recce.this)) {
-            bmImage = BitmapFactory.decodeFile(mainpic.toString(), null);
-            ivRecceImage.setImageBitmap(bmImage);
-            bmImage = BitmapFactory.decodeFile(image1.toString(), null);
-            ivOtherImage1.setImageBitmap(bmImage);
-            bmImage = BitmapFactory.decodeFile(image2.toString(), null);
-            ivOtherImage2.setImageBitmap(bmImage);
-            bmImage = BitmapFactory.decodeFile(image3.toString(), null);
-            ivOtherImage3.setImageBitmap(bmImage);
-            bmImage = BitmapFactory.decodeFile(image4.toString(), null);
-            ivOtherImage4.setImageBitmap(bmImage);
+            Toast.makeText(getBaseContext(),mainpic.toString(),Toast.LENGTH_SHORT).show();
+            Toast.makeText(getBaseContext(),image1.toString(),Toast.LENGTH_SHORT).show();
+            Toast.makeText(getBaseContext(),image2.toString(),Toast.LENGTH_SHORT).show();
+            Toast.makeText(getBaseContext(),image3.toString(),Toast.LENGTH_SHORT).show();
+            if (mainpic.contains("noimage.png") || !mainpic.contains("storage")){
+                ivRecceImage.setImageResource(R.drawable.dummy);
+            }else {
+                bmImage = BitmapFactory.decodeFile(mainpic.toString(), null);
+                ivRecceImage.setImageBitmap(bmImage);
+            }
+            if ( image1.contains("noimage.png") || !image1.contains("storage")){
+                ivOtherImage1.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+                ivOtherImage1.setImageResource(R.drawable.dummy);
+            }else {
+                bmImage = BitmapFactory.decodeFile(image1.toString(), null);
+                ivOtherImage1.setImageBitmap(bmImage);
+            }
+            if ( image2.contains("noimage.png") || !image2.contains("storage")){
+                ivOtherImage2.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+                ivOtherImage2.setImageResource(R.drawable.dummy);
+
+            }else {
+                bmImage = BitmapFactory.decodeFile(image2.toString(), null);
+                ivOtherImage2.setImageBitmap(bmImage);
+            }
+            if (image3.contains("noimage.png") || !image3.contains("storage")){
+                ivOtherImage3.setImageResource(R.drawable.dummy);
+                ivOtherImage3.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+
+            }else {
+                bmImage = BitmapFactory.decodeFile(image3.toString(), null);
+                ivOtherImage3.setImageBitmap(bmImage);
+            }
+            if (image4.contains("noimage") || !image4.contains("storage")){
+                ivOtherImage4.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+                ivOtherImage4.setImageResource(R.drawable.dummy);
+            }else {
+                bmImage = BitmapFactory.decodeFile(image4.toString(), null);
+                ivOtherImage4.setImageBitmap(bmImage);
+            }
 
         } else {
             Picasso.with(Update_Recce.this)
-                    .load("http://128.199.131.14/samsdev/web/image_uploads/recce_uploads/" + mainpic)
+                    .load("http://128.199.131.14/sams/web/image_uploads/recce_uploads/" + mainpic)
                     .memoryPolicy(MemoryPolicy.NO_CACHE)
                     .networkPolicy(NetworkPolicy.NO_CACHE)
                     .resize(512, 512)
@@ -232,7 +263,7 @@ public class Update_Recce extends Activity {
                     .noFade()
                     .into(ivRecceImage);
             Picasso.with(Update_Recce.this)
-                    .load("http://128.199.131.14/samsdev/web/image_uploads/recce_images_1_uploads/" + image1)
+                    .load("http://128.199.131.14/sams/web/image_uploads/recce_images_1_uploads/" + image1)
                     .memoryPolicy(MemoryPolicy.NO_CACHE)
                     .networkPolicy(NetworkPolicy.NO_CACHE)
                     .resize(512, 512)
@@ -241,7 +272,7 @@ public class Update_Recce extends Activity {
                     .into(ivOtherImage1);
 
             Picasso.with(Update_Recce.this)
-                    .load("http://128.199.131.14/samsdev/web/image_uploads/recce_images_2_uploads/" + image2)
+                    .load("http://128.199.131.14/sams/web/image_uploads/recce_images_2_uploads/" + image2)
                     .memoryPolicy(MemoryPolicy.NO_CACHE)
                     .networkPolicy(NetworkPolicy.NO_CACHE)
                     .resize(512, 512)
@@ -250,7 +281,7 @@ public class Update_Recce extends Activity {
                     .into(ivOtherImage2);
 
             Picasso.with(Update_Recce.this)
-                    .load("http://128.199.131.14/samsdev/web/image_uploads/recce_images_3_uploads/" + image3)
+                    .load("http://128.199.131.14/sams/web/image_uploads/recce_images_3_uploads/" + image3)
                     .memoryPolicy(MemoryPolicy.NO_CACHE)
                     .networkPolicy(NetworkPolicy.NO_CACHE)
                     .resize(512, 512)
@@ -258,7 +289,7 @@ public class Update_Recce extends Activity {
                     .noFade()
                     .into(ivOtherImage3);
             Picasso.with(Update_Recce.this)
-                    .load("http://128.199.131.14/samsdev/web/image_uploads/recce_images_4_uploads/" + image4)
+                    .load("http://128.199.131.14/sams/web/image_uploads/recce_images_4_uploads/" + image4)
                     .memoryPolicy(MemoryPolicy.NO_CACHE)
                     .networkPolicy(NetworkPolicy.NO_CACHE)
                     .resize(512, 512)
@@ -343,10 +374,10 @@ public class Update_Recce extends Activity {
         RequestBody userid = RequestBody.create(MediaType.parse("text/plain"), Preferences.getUserid());
         RequestBody crew_person_id = RequestBody.create(MediaType.parse("text/plain"), Preferences.getCrewPersonid_project());
         RequestBody recce_id = RequestBody.create(MediaType.parse("text/plain"), getIntent().getStringExtra("recce_id").toString());
-        /*Log.d("iv_url1", iv_url1.toString());
-        Log.d("iv_url2", iv_url2.toString());
-        Log.d("iv_url3", iv_url3.toString());
-        Log.d("iv_url4", iv_url4.toString());*/
+        Log.d("key",Preferences.getKey());
+        Log.d("userid",Preferences.getUserid());
+        Log.d("crewpersonid",Preferences.getCrewPersonid_project());
+        Log.d("recceid",getIntent().getStringExtra("recce_id").toString());
         if (iv_urlRC == null) {
             Toast.makeText(getBaseContext(), "please select Main image", Toast.LENGTH_SHORT).show();
         } else if (iv_url1 == null) {
@@ -373,7 +404,7 @@ public class Update_Recce extends Activity {
                     RequestBody.create(MediaType.parse("image/*"), otherImagefile4));
             RequestBody lat = RequestBody.create(MediaType.parse("text/plain"), latitude);
             RequestBody log = RequestBody.create(MediaType.parse("text/plain"), longitude);
-            RequestBody address_s = RequestBody.create(MediaType.parse("text/plain"), address);
+            RequestBody address_s = RequestBody.create(MediaType.parse("text/plain"), "vizag");
             uploadRecce(uomid, width, height
                     , width_feet, height_feet, width_inch
                     ,height_inch, key, userid, crew_person_id, recce_id, filePart, imageFilePart1,
@@ -713,6 +744,9 @@ public class Update_Recce extends Activity {
                 + "',recce_image_upload_status='" + status + "',longitude='" + longitude + "',outlet_address='" + outlet_address + "'" + "WHERE recce_id=" + recce_id);
         db.close();
         Log.d("success", "successfully updated recce");
+        Intent recce_display= new Intent(Update_Recce.this,Recces_display.class);
+        startActivity(recce_display);
+        finish();
     }
 
 

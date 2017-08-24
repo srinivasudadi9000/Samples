@@ -52,7 +52,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:lines="4"
+                android:lines="3"
                 android:text="Address" />
 
             <TextView
@@ -81,6 +81,7 @@
                 android:orientation="horizontal">
 
                 <TextView
+                    android:textColor="#ff0000"
                     android:id="@+id/recce_status_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

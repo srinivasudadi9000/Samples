@@ -69,7 +69,7 @@ public class Update_Install extends Activity {
 
         } else {
             Picasso.with(Update_Install.this)
-                    .load("http://128.199.131.14/samsdev/web/image_uploads/recce_uploads/" + getIntent().getStringExtra("recce_image"))
+                    .load("http://128.199.131.14/sams/web/image_uploads/recce_uploads/" + getIntent().getStringExtra("recce_image"))
                     .memoryPolicy(MemoryPolicy.NO_CACHE)
                     .networkPolicy(NetworkPolicy.NO_CACHE)
                     .resize(512, 512)
@@ -78,7 +78,7 @@ public class Update_Install extends Activity {
                     .into(recceImage);
 
             Picasso.with(Update_Install.this)
-                    .load("http://128.199.131.14/samsdev/web/image_uploads/install_uploads/" +getIntent().getStringExtra("install_image"))
+                    .load("http://128.199.131.14/sams/web/image_uploads/install_uploads/" +getIntent().getStringExtra("install_image"))
                     .memoryPolicy(MemoryPolicy.NO_CACHE)
                     .networkPolicy(NetworkPolicy.NO_CACHE)
                     .resize(512, 512)
@@ -199,6 +199,8 @@ public class Update_Install extends Activity {
 
 
         db.close();
+        Intent recce_display= new Intent(Update_Install.this,Recces_display.class);
+        startActivity(recce_display);
         finish();
         Log.d("success", "successfully updated recce");
     }

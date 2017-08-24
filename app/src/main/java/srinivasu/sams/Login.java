@@ -4,9 +4,12 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.telephony.TelephonyManager;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -37,26 +40,29 @@ public class Login extends Activity {
     Spinner spinner_login;
     @BindView(R.id.login_btn)
     Button login_btn;
-    String validation_vendor_name=null;
+    String validation_vendor_name = null;
+    TelephonyManager manager;
+    String imenumber1, imenumber2;
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
         ButterKnife.bind(this);
         //Preferences.setProject("key","65","2");
-        appLogin();
-        Toast.makeText(getBaseContext(),Preferences.getKey(),Toast.LENGTH_LONG).show();
+
         spinner_login.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int i, long id) {
                 validation_vendor_name = vendors.get(i).getVendor_name().toString();
-                Toast.makeText(getBaseContext(), vendors.get(i).getVendor_name().toString(), Toast.LENGTH_SHORT).show();
-                Preferences.setVendor(vendors.get(i).getVendor_id(), vendors.get(i).getVendor_name(), vendors.get(i).getCrew_person_id(),Login.this);
+                //   Toast.makeText(getBaseContext(), vendors.get(i).getVendor_name().toString(), Toast.LENGTH_SHORT).show();
+                Preferences.setVendor(vendors.get(i).getVendor_id(), vendors.get(i).getVendor_name(), vendors.get(i).getCrew_person_id(), Login.this);
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                Preferences.setVendor(null, null, null,Login.this);
+                Preferences.setVendor(null, null, null, Login.this);
 
             }
         });
@@ -64,11 +70,17 @@ public class Login extends Activity {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA,
                     Manifest.permission.WRITE_EXTERNAL_STORAGE,
                     Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.ACCESS_NETWORK_STATE}, 0);
+                    Manifest.permission.ACCESS_NETWORK_STATE, Manifest.permission.READ_PHONE_STATE}, 0);
         }
         //getProjects();
         //getRecceslist();
         // getInstalllist();
+        manager = (TelephonyManager) getSystemService(Login.TELEPHONY_SERVICE);
+        imenumber1 = manager.getDeviceId(0);
+        imenumber2 = manager.getDeviceId(1);
+        appLogin();
+       // Toast.makeText(getBaseContext(), Preferences.getKey(), Toast.LENGTH_LONG).show();
+
     }
 
     @Override
@@ -91,15 +103,18 @@ public class Login extends Activity {
         startActivity(i);
     }
 
+
     public void appLogin() {
+
         ApiInterface apiService = ApiClient.getSams().create(ApiInterface.class);
-        Call<Appopen> call = apiService.getVendors("862114032689487", "111111111111111");
+       Call<Appopen> call = apiService.getVendors("862114032689487", "111111111111111");
+      //  Call<Appopen> call = apiService.getVendors(imenumber1, imenumber2);
         call.enqueue(new Callback<Appopen>() {
             @Override
             public void onResponse(Call<Appopen> call, Response<Appopen> response) {
                 // String size = String.valueOf(response.body().getList().size());
 
-                Toast.makeText(getBaseContext(), "   " + response.body().getStatus(), Toast.LENGTH_SHORT).show();
+                //     Toast.makeText(getBaseContext(), "   " + response.body().getStatus(), Toast.LENGTH_SHORT).show();
                 vendors = response.body().getVendors_list();
                 login_spinner = new Login_spinner(Login.this, vendors);
                 spinner_login.setAdapter(login_spinner);

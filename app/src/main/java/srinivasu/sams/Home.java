@@ -57,6 +57,7 @@ public class Home extends Activity {
                 startActivity(sync);
                 break;
             case R.id.logout_btn:
+                 finish();
                 break;
 
         }

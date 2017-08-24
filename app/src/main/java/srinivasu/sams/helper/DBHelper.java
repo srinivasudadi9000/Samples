@@ -8,6 +8,7 @@ import android.util.Log;
 import java.util.List;
 
 import srinivasu.sams.model.Installation;
+import srinivasu.sams.model.Products;
 import srinivasu.sams.model.Projects;
 import srinivasu.sams.model.Recce;
 
@@ -19,27 +20,76 @@ public class DBHelper {
     static SQLiteDatabase db;
     static Context context;
 
+    public DBHelper(String x,String y,String z,String a,String b,Context context){
+        db = context.openOrCreateDatabase("SAMS", Context.MODE_PRIVATE, null);
+        db.execSQL("CREATE TABLE IF NOT EXISTS project(project_id VARCHAR unique,project_name VARCHAR,vendor_id VARCHAR);");
+
+        db.execSQL("CREATE TABLE IF NOT EXISTS product(product_id VARCHAR unique,product_name VARCHAR,vendor_id VARCHAR);");
+
+        db.execSQL("CREATE TABLE IF NOT EXISTS recce(recce_id VARCHAR unique,project_id VARCHAR,key VARCHAR,userid VARCHAR,crewpersonid VARCHAR," +
+                "product_name VARCHAR,zone_id VARCHAR,uom_id VARCHAR,uom_name VARCHAR," +
+                "recce_date VARCHAR,outlet_name VARCHAR,outlet_owner_name VARCHAR," +
+                "outlet_address VARCHAR,longitude VARCHAR,latitude VARCHAR,width VARCHAR," +
+                "height VARCHAR,width_feet VARCHAR,height_feet VARCHAR,width_inches VARCHAR," +
+                "height_inches VARCHAR,recce_image VARCHAR,recce_image_1 VARCHAR,recce_image_2 VARCHAR," +
+                "recce_image_3 VARCHAR,recce_image_4 VARCHAR," +
+                "product0 VARCHAR,uoms VARCHAR,recce_image_upload_status VARCHAR);");
+
+
+        db.execSQL("CREATE TABLE IF NOT EXISTS install(recce_id VARCHAR unique,project_id VARCHAR," +
+                "vendor_id VARCHAR,crew_person_id VARCHAR,recce_date VARCHAR," +
+                "outlet_name VARCHAR,outlet_owner_name VARCHAR," +
+                "outlet_address VARCHAR,longitude VARCHAR,latitude VARCHAR,recce_image VARCHAR,installation_date VARCHAR" +
+                ",installation_image VARCHAR,installation_remarks VARCHAR ,width VARCHAR," +
+                "height VARCHAR,width_feet VARCHAR,height_feet VARCHAR,width_inches VARCHAR," +
+                "height_inches VARCHAR,product_name VARCHAR,product0 VARCHAR,installation_image_upload_status VARCHAR," +
+                "recce_image_path VARCHAR,key VARCHAR,userid VARCHAR);");
+
+
+    }
     public DBHelper(List<Projects> projects, Context context, String project, String constru_one) {
         this.context = context;
         db = context.openOrCreateDatabase("SAMS", Context.MODE_PRIVATE, null);
-        db.execSQL("CREATE TABLE IF NOT EXISTS project(project_id VARCHAR unique,project_name VARCHAR);");
+        db.execSQL("CREATE TABLE IF NOT EXISTS project(project_id VARCHAR unique,project_name VARCHAR,vendor_id VARCHAR);");
         String size = String.valueOf(projects.size());
        // Toast.makeText(context.getApplicationContext(), size, Toast.LENGTH_SHORT).show();
         for (int i = 0; i < projects.size(); i++) {
             if (validaterecord(projects.get(i).getProject_id(), "project").equals("notvalidate")) {
-                Log.d("projects",projects.get(i).getProject_id().toString());
-                insertProject(projects.get(i).getProject_id(), projects.get(i).getProject_name());
+              //  Log.d("projects",projects.get(i).getProject_id().toString());
+                insertProject(projects.get(i).getProject_id(), projects.get(i).getProject_name(),Preferences.getVendorid());
             }else {
-                Log.d("projects","no ra");
+              //  Log.d("projects","no ra");
             }
         }
         //viewmydb();
     }
 
-    private void insertProject(String project_id, String project_name) {
-        db.execSQL("INSERT INTO project VALUES('" + project_id + "','" + project_name+ "');");
+
+    private void insertProject(String project_id, String project_name,String vendor_id) {
+        db.execSQL("INSERT INTO project VALUES('" + project_id + "','" + project_name+ "','"+vendor_id+"');");
 
     }
+
+    public DBHelper(List<Products> productses, Context context, String produts, String constru_one, String products) {
+        this.context = context;
+        db = context.openOrCreateDatabase("SAMS", Context.MODE_PRIVATE, null);
+        db.execSQL("CREATE TABLE IF NOT EXISTS product(product_id VARCHAR unique,product_name VARCHAR,vendor_id VARCHAR);");
+        // Toast.makeText(context.getApplicationContext(), size, Toast.LENGTH_SHORT).show();
+        for (int i = 0; i < productses.size(); i++) {
+            if (validaterecord(productses.get(i).getProduct_id(), "product").equals("notvalidate")) {
+              //  Log.d("projects",productses.get(i).getProduct_id().toString());
+
+                insertProduct(productses.get(i).getProduct_id(), productses.get(i).getProduct_name(),Preferences.getVendorid());
+            }else {
+              //  Log.d("projects","no ra");
+            }
+        }
+        //viewmydb();
+    }
+    private void insertProduct(String product_id, String product_name,String vendor_id) {
+        db.execSQL("INSERT INTO product VALUES('" + product_id + "','" + product_name+"','"+vendor_id+ "');");
+    }
+
 
     public DBHelper(List<Recce> recces, Context context) {
         this.context = context;
@@ -148,6 +198,14 @@ public class DBHelper {
             }
         } else if (instal.equals("project")){
             Cursor c = db.rawQuery("SELECT * FROM project WHERE project_id='" + recceid + "'", null);
+            if (c.moveToFirst()) {
+                return "validate";
+            } else {
+                return "notvalidate";
+            }
+        }
+        else if (instal.equals("product")){
+            Cursor c = db.rawQuery("SELECT * FROM product WHERE product_id='" + recceid + "'", null);
             if (c.moveToFirst()) {
                 return "validate";
             } else {

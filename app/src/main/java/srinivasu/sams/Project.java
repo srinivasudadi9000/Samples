@@ -23,6 +23,7 @@ import srinivasu.sams.Adapter.ProjectAdapter;
 import srinivasu.sams.helper.DBHelper;
 import srinivasu.sams.helper.Preferences;
 import srinivasu.sams.model.Login_Service;
+import srinivasu.sams.model.Products;
 import srinivasu.sams.model.Projects;
 import srinivasu.sams.rest.ApiClient;
 import srinivasu.sams.rest.ApiInterface;
@@ -31,6 +32,7 @@ import srinivasu.sams.validation.Validation;
 public class Project extends Activity {
     @BindView(R.id.project_recyler)
     RecyclerView project_recyler;
+    List<Products> productses = null;
     SQLiteDatabase db;
 
     @Override
@@ -40,11 +42,13 @@ public class Project extends Activity {
         ButterKnife.bind(this);
         project_recyler.setLayoutManager(new LinearLayoutManager(this));
        // project_recyler.setItemAnimator(new DefaultItemAnimator());
+        Preferences.setProducts("nul");
         if (!Validation.internet(Project.this)) {
             getProject_from_local();
           //  Toast.makeText(getBaseContext(), "local db recces", Toast.LENGTH_LONG).show();
         } else {
             getProjects(Preferences.getCrewpersonid(), Preferences.getVendorid());
+
         }
         //Preferences.setProject("fkfkkd3313132","u-45","123");
         //Toast.makeText(getBaseContext(),Preferences.getCrewpersonid()+"  "+Preferences.getVendorid(),Toast.LENGTH_LONG).show();
@@ -59,7 +63,7 @@ public class Project extends Activity {
         db = openOrCreateDatabase("SAMS", Context.MODE_PRIVATE, null);
         //  Cursor c=db.rawQuery("SELECT * FROM recce WHERE recce_id='"+email+"' and resume='"+resumename+"'", null);
        // Cursor c = db.rawQuery("SELECT * FROM project WHERE project_id='" + getIntent().getStringExtra("projectid").toString() + "'", null);
-        Cursor c = db.rawQuery("SELECT * FROM project", null);
+        Cursor c = db.rawQuery("SELECT * FROM project WHERE vendor_id='"+Preferences.getVendorid()+"'", null);
 
         if (c.moveToFirst()) {
             while (!c.isAfterLast()) {
@@ -89,12 +93,18 @@ public class Project extends Activity {
                 Log.d("crewperson", response.body().getCrew_person_name().toString());
                 Log.d("userid", response.body().getUser_id().toString());
                 Log.d("getcrewpersonid", response.body().getCrew_person_id().toString());
+                if (response.body().getKey().toString() != null || response.body().getCrew_person_name().toString() != null
+                        || response.body().getUser_id().toString() != null){
+                    Preferences.setProject(response.body().getKey().toString(), response.body().getUser_id().toString(),
+                            response.body().getCrew_person_id().toString());
+                }else {
+                    Preferences.setProject("", "",response.body().getCrew_person_id().toString());
+                }
 
-                Preferences.setProject(response.body().getKey().toString(), response.body().getUser_id().toString(),
-                        response.body().getCrew_person_id().toString());
                 List<Projects> projects = response.body().getProjects();
                 project_recyler.setAdapter(new ProjectAdapter(projects, R.layout.project_single, getApplicationContext()));
                 new DBHelper(projects, Project.this, null, null);
+
               /*  String xx = String.valueOf(projects.size());
                 Toast.makeText(getBaseContext(),xx.toString(),Toast.LENGTH_SHORT).show();
                 for (int i = 0; i < projects.size(); i++) {
@@ -113,5 +123,7 @@ public class Project extends Activity {
         db = openOrCreateDatabase("SAMS", Context.MODE_PRIVATE, null);
         db.execSQL("UPDATE project SET project_name='" + project_name + "'"+"WHERE project_id="+project_id);
     }
+
+
 
 }

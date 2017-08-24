@@ -58,14 +58,39 @@ public class Preferences  {
         SharedPreferences projectid = context.getSharedPreferences("PROJECT_ID",context.MODE_PRIVATE);
         return projectid.getString("project_id","");
     }
+    public static void setreeceId_product(String projectId){
+        SharedPreferences.Editor project = context.getSharedPreferences("RECCE_ID", context.MODE_PRIVATE).edit();
+        project.putString("recce_id",projectId);
+        project.commit();
+    }
+    public static String getreeceId_product(){
+        SharedPreferences projectid = context.getSharedPreferences("RECCE_ID",context.MODE_PRIVATE);
+        return projectid.getString("recce_id","");
+    }
+
+    public static void setProducts(String selection){
+        if (selection.equals("done")){
+            SharedPreferences.Editor type = context.getSharedPreferences("PRODUCT_DISPLAY", context.MODE_PRIVATE).edit();
+            type.putString("productdisplay",selection);
+            type.commit();
+        }else {
+            SharedPreferences.Editor type = context.getSharedPreferences("PRODUCT_DISPLAY", context.MODE_PRIVATE).edit();
+            type.putString("productdisplay","notdone");
+            type.commit();
+        }
+    }
+    public static String getProducts(){
+        SharedPreferences type = context.getSharedPreferences("PRODUCT_DISPLAY",context.MODE_PRIVATE);
+        return type.getString("productdisplay","");
+    }
     public static void setSelection(String selection){
-        SharedPreferences.Editor type = context.getSharedPreferences("TYPE", context.MODE_PRIVATE).edit();
-        type.putString("type",selection);
+        SharedPreferences.Editor type = context.getSharedPreferences("SELECCTION", context.MODE_PRIVATE).edit();
+        type.putString("selection",selection);
         type.commit();
     }
     public static String getSelection(){
-        SharedPreferences type = context.getSharedPreferences("TYPE",context.MODE_PRIVATE);
-        return type.getString("type","");
+        SharedPreferences type = context.getSharedPreferences("SELECCTION",context.MODE_PRIVATE);
+        return type.getString("selection","");
     }
 
 }

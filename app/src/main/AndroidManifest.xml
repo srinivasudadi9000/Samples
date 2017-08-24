@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.DELETE_CACHE_FILES" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
@@ -40,7 +41,8 @@
         <activity android:name=".Update_Recce" />
         <activity android:name=".Update_Install" />
         <activity android:name=".Sync" />
-        <activity android:name=".Product_Display"></activity>
+        <activity android:name=".Product_Display" />
+        <activity android:name=".AddRecceWeb"></activity>
     </application>
 
 </manifest>

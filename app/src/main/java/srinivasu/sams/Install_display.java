@@ -7,7 +7,11 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.Spinner;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +36,12 @@ public class Install_display extends Activity {
     RecyclerView install_recyler;
     List<Installation> installations = null;
     SQLiteDatabase db;
+    @BindView(R.id.svOutletNameAddress)
+    SearchView svOutletNameAddress;
+    @BindView(R.id.spFilter)
+    Spinner spFilter;
+    String position;
+    InstallAdapter installadapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,6 +55,39 @@ public class Install_display extends Activity {
         } else {
             getInstalllist();
         }
+        svOutletNameAddress.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                if (position.equals("O.Name")) {
+                    installadapter.filter(newText.toString());
+                } else {
+                    installadapter.filteraddress(newText.toString());
+                }
+                // rla.filteraddress(newText.toString());
+                return false;
+
+            }
+        });
+
+        spFilter.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                position = adapterView.getSelectedItem().toString();
+                // Toast.makeText(getBaseContext(), position, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+                //loadReccesFromDatabase(getIntent().getExtras().getString("projectid"), "All", "");
+            }
+        });
+
+
     }
 
     @OnClick(R.id.back)
@@ -60,7 +103,8 @@ public class Install_display extends Activity {
             @Override
             public void onResponse(Call<GetInstall> call, Response<GetInstall> response) {
                 installations = response.body().getRecces();
-                install_recyler.setAdapter(new InstallAdapter(installations, R.layout.install_single, getApplicationContext()));
+                installadapter = new InstallAdapter(installations, R.layout.install_single, getApplicationContext());
+                install_recyler.setAdapter(installadapter);
                 new DBHelper( installations , Install_display.this,"install");
 
             }
@@ -118,7 +162,8 @@ public class Install_display extends Activity {
                 c.moveToNext();
             }
         }
-        install_recyler.setAdapter(new InstallAdapter(install_offline, R.layout.recee_single, getApplicationContext()));
+        installadapter =new InstallAdapter(install_offline, R.layout.recee_single, getApplicationContext());
+        install_recyler.setAdapter(installadapter);
     }
 
 

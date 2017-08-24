@@ -5,18 +5,22 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import srinivasu.sams.R;
 import srinivasu.sams.Update_Install;
@@ -29,11 +33,13 @@ import srinivasu.sams.validation.Validation;
 
 public class InstallAdapter extends RecyclerView.Adapter<InstallAdapter.Recceholder> {
     private List<Installation> installations;
+    private List<Installation> installations_filter;
     private int rowLayout;
     public Context context;
 
     public InstallAdapter(List<Installation> installations, int rowLayout, Context context) {
         this.installations = installations;
+        this.installations_filter = installations;
         this.rowLayout = rowLayout;
         this.context = context;
     }
@@ -50,22 +56,28 @@ public class InstallAdapter extends RecyclerView.Adapter<InstallAdapter.Reccehol
         holder.outletaddress_tv.setText(installations.get(position).getOutlet_address().toString());
         holder.productname_tv.setText(installations.get(position).getProduct_name().toString());
         holder.height_width_tv.setText(installations.get(position).getHeight().toString() + "X" + installations.get(position).getWidth().toString());
-        holder.recce_status_tv.setText(installations.get(position).getInstallation_image_upload_status().toString());
 
-        if (installations.get(position).getInstallation_image_upload_status().equals("Completed")){
+        if (installations.get(position).getInstallation_image_upload_status().equals("Completed")) {
             holder.recce_img.setScaleType(ImageView.ScaleType.FIT_XY);
-        }else {
+            holder.recce_status_tv.setTextColor(Color.parseColor("#00a65a"));
+            holder.recce_status_tv.setText(installations.get(position).getInstallation_image_upload_status().toString());
+
+        } else {
             holder.recce_img.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
         }
 
         Bitmap bmImage = null;
         if (!Validation.internet(context)) {
-            bmImage = BitmapFactory.decodeFile(installations.get(position).getInstallation_image().toString(), null);
-            holder.recce_img.setImageBitmap(bmImage);
+            if (installations.get(position).getInstallation_image().toString().contains("storage")) {
+                bmImage = BitmapFactory.decodeFile(installations.get(position).getInstallation_image().toString(), null);
+                holder.recce_img.setImageBitmap(bmImage);
+            } else {
+                holder.recce_img.setImageResource(R.drawable.dummy);
+            }
 
         } else {
             Picasso.with(context)
-                    .load("http://128.199.131.14/samsdev/web/image_uploads/install_uploads/" + installations.get(position).getInstallation_image().toString())
+                    .load("http://128.199.131.14/sams/web/image_uploads/install_uploads/" + installations.get(position).getInstallation_image().toString())
                     .memoryPolicy(MemoryPolicy.NO_CACHE)
                     .networkPolicy(NetworkPolicy.NO_CACHE)
                     .resize(512, 512)
@@ -100,41 +112,81 @@ public class InstallAdapter extends RecyclerView.Adapter<InstallAdapter.Reccehol
             recce_img.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                 //   Toast.makeText(v.getContext(), "install adapter ra babu", Toast.LENGTH_SHORT).show();
-                    String installdate="",installremark="",recce_image="",install_image="";
+                    //   Toast.makeText(v.getContext(), "install adapter ra babu", Toast.LENGTH_SHORT).show();
+                    String installdate = "", installremark = "", recce_image = "", install_image = "";
                     Intent updateinstall = new Intent(context, Update_Install.class);
-                    updateinstall.putExtra("recce_id",installations.get(getAdapterPosition()).getRecce_id().toString());
-                    if (installations.get(getAdapterPosition()).getInstallation_date().toString()!=null){
-                        updateinstall.putExtra("install_date",installations.get(getAdapterPosition()).getInstallation_date().toString());
-                    }else {
-                        updateinstall.putExtra("install_date",installdate);
+                    updateinstall.putExtra("recce_id", installations.get(getAdapterPosition()).getRecce_id().toString());
+                    if (installations.get(getAdapterPosition()).getInstallation_date().toString() != null) {
+                        updateinstall.putExtra("install_date", installations.get(getAdapterPosition()).getInstallation_date().toString());
+                    } else {
+                        updateinstall.putExtra("install_date", installdate);
                     }
-                    if (installations.get(getAdapterPosition()).getInstallation_remarks().toString() !=null){
-                        updateinstall.putExtra("install_remark",installations.get(getAdapterPosition()).getInstallation_remarks().toString());
+                    if (installations.get(getAdapterPosition()).getInstallation_remarks().toString() != null) {
+                        updateinstall.putExtra("install_remark", installations.get(getAdapterPosition()).getInstallation_remarks().toString());
 
-                    }else {
-                        updateinstall.putExtra("install_remark",installremark);
+                    } else {
+                        updateinstall.putExtra("install_remark", installremark);
 
-                    }
-
-                    if (installations.get(getAdapterPosition()).getRecce_image().toString()!=null){
-                        updateinstall.putExtra("recce_image",installations.get(getAdapterPosition()).getRecce_image().toString());
-                    }else {
-                        updateinstall.putExtra("recce_image",recce_image);
                     }
 
-                    if (installations.get(getAdapterPosition()).getInstallation_image().toString()!=null){
-                        updateinstall.putExtra("install_image",installations.get(getAdapterPosition()).getInstallation_image().toString());
-                    }else {
-                        updateinstall.putExtra("install_image",install_image);
+                    if (installations.get(getAdapterPosition()).getRecce_image().toString() != null) {
+                        updateinstall.putExtra("recce_image", installations.get(getAdapterPosition()).getRecce_image().toString());
+                    } else {
+                        updateinstall.putExtra("recce_image", recce_image);
+                    }
+
+                    if (installations.get(getAdapterPosition()).getInstallation_image().toString() != null) {
+                        updateinstall.putExtra("install_image", installations.get(getAdapterPosition()).getInstallation_image().toString());
+                    } else {
+                        updateinstall.putExtra("install_image", install_image);
                     }
 
                     ;
                     itemView.getContext().startActivity(updateinstall);
-                    ((Activity)itemView.getContext()).finish();
+                    ((Activity) itemView.getContext()).finish();
                 }
             });
 
         }
     }
+
+    public void filter(String charText) {
+        charText = charText.toUpperCase(Locale.getDefault());
+        Toast.makeText(context, charText.toString(), Toast.LENGTH_SHORT).show();
+        // dealerses.clear();
+        if (charText.length() == 0) {
+            installations = installations_filter;
+        } else {
+
+            ArrayList<Installation> filteredList = new ArrayList<>();
+
+            for (Installation androidVersion : installations) {
+                if (androidVersion.getOutlet_name().contains(charText)) {
+                    filteredList.add(androidVersion);
+                }
+            }
+            installations = filteredList;
+        }
+        notifyDataSetChanged();
+    }
+
+    public void filteraddress(String charText) {
+        charText = charText.toLowerCase(Locale.getDefault());;
+       // Toast.makeText(context, charText.toString(), Toast.LENGTH_SHORT).show();
+        // dealerses.clear();
+        if (charText.length() == 0) {
+            installations = installations_filter;
+        } else {
+            ArrayList<Installation> filteredList = new ArrayList<>();
+
+            for (Installation androidVersion : installations) {
+                if (androidVersion.getOutlet_address().contains(charText)) {
+                    filteredList.add(androidVersion);
+                }
+            }
+            installations = filteredList;
+        }
+        notifyDataSetChanged();
+    }
+
 }

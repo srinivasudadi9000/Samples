@@ -1,12 +1,12 @@
 package srinivasu.sams;
 
+import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -27,40 +27,43 @@ import srinivasu.sams.model.UploadRecce;
 import srinivasu.sams.rest.ApiClient;
 import srinivasu.sams.rest.ApiInterface;
 
-public class Sync extends AppCompatActivity {
+public class Sync extends Activity {
     SQLiteDatabase db;
-    String rec_id,project_id,product_name,uom_id,uom_name,outlet_name,outlet_address,longitude,latitude,
-            width,height,width_feet,height_feet,width_inches,height_inches,recce_image,recce_image_1,
-            recce_image_2,recce_image_3,recce_image_4,recce_image_upload_status,product0;
-    File RimgFile=null,RimgFile_install=null,otherImagefile1=null,otherImagefile2=null,otherImagefile3=null,otherImagefile4=null;
-    String installation_date_tv,installation_remarks_tv,key_tv,userid_tv,crew_person_id_tv,recce_id_tv,project_id_tv
-            ,installation_image;
+    String rec_id, project_id, product_name, uom_id, uom_name, outlet_name, outlet_address, longitude, latitude,
+            width, height, width_feet, height_feet, width_inches, height_inches, recce_image, recce_image_1,
+            recce_image_2, recce_image_3, recce_image_4, recce_image_upload_status, product0;
+    File RimgFile = null, RimgFile_install = null, otherImagefile1 = null, otherImagefile2 = null, otherImagefile3 = null, otherImagefile4 = null;
+    String installation_date_tv, installation_remarks_tv, key_tv, userid_tv, crew_person_id_tv, recce_id_tv, project_id_tv, installation_image;
+    TextView sync_status;
+    int index=0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sync);
+        sync_status = (TextView) findViewById(R.id.sync_status);
         getRecces_from_local();
         getInstall_from_local();
     }
 
 
-    public  void getInstall_from_local() {
+    public void getInstall_from_local() {
+        index = 0;
         db = openOrCreateDatabase("SAMS", Context.MODE_PRIVATE, null);
-        Toast.makeText(Sync.this, "view my db install data ", Toast.LENGTH_SHORT).show();
+       // Toast.makeText(Sync.this, "view my db install data ", Toast.LENGTH_SHORT).show();
         //  Cursor c=db.rawQuery("SELECT * FROM recce WHERE recce_id='"+email+"' and resume='"+resumename+"'", null);
         Cursor c = db.rawQuery("SELECT * FROM install WHERE product0='offline_update'", null);
 
         if (c.moveToFirst()) {
             while (!c.isAfterLast()) {
 
-                 installation_date_tv = c.getString(c.getColumnIndex("installation_date"));
-                 installation_remarks_tv=c.getString(c.getColumnIndex("installation_remarks"));
-                 key_tv = c.getString(c.getColumnIndex("key"));
-                 userid_tv=c.getString(c.getColumnIndex("userid"));
-                 crew_person_id_tv=c.getString(c.getColumnIndex("crew_person_id"));
-                  recce_id_tv=c.getString(c.getColumnIndex("recce_id"));
-                 project_id_tv=c.getString(c.getColumnIndex("project_id"));
-                 installation_image=c.getString(c.getColumnIndex("installation_image"));
+                installation_date_tv = c.getString(c.getColumnIndex("installation_date"));
+                installation_remarks_tv = c.getString(c.getColumnIndex("installation_remarks"));
+                key_tv = c.getString(c.getColumnIndex("key"));
+                userid_tv = c.getString(c.getColumnIndex("userid"));
+                crew_person_id_tv = c.getString(c.getColumnIndex("crew_person_id"));
+                recce_id_tv = c.getString(c.getColumnIndex("recce_id"));
+                project_id_tv = c.getString(c.getColumnIndex("project_id"));
+                installation_image = c.getString(c.getColumnIndex("installation_image"));
                 RimgFile_install = new File(installation_image);
 
                 RequestBody key = RequestBody.create(MediaType.parse("text/plain"), key_tv);
@@ -70,11 +73,12 @@ public class Sync extends AppCompatActivity {
                 RequestBody project_id = RequestBody.create(MediaType.parse("text/plain"), project_id_tv);
                 MultipartBody.Part imageFilePart1 = MultipartBody.Part.createFormData("installation_image", RimgFile_install.getName(),
                         RequestBody.create(MediaType.parse("image/*"), RimgFile_install));
-                updateInstall(installation_date_tv,installation_remarks_tv,key,userid,crew_person_id,recce_id,
-                        project_id,imageFilePart1);
+                updateInstall(installation_date_tv, installation_remarks_tv, key, userid, crew_person_id, recce_id,
+                        project_id, imageFilePart1);
                 c.moveToNext();
             }
         }
+        finish();
     }
 
     public void updateInstall(@Query("installation_date") final String installation_date,
@@ -84,13 +88,13 @@ public class Sync extends AppCompatActivity {
                               @Part("recce_id") final RequestBody recce_id, @Part("project_id") final RequestBody project_id,
                               @Part final MultipartBody.Part installation_image) {
         ApiInterface apiService = ApiClient.getSams().create(ApiInterface.class);
-        Call<UploadInstall> call = apiService.getUploadInstall(installation_date,installation_remarks, key,
-                user_id,  crew_person_id, recce_id,project_id,installation_image);
+        Call<UploadInstall> call = apiService.getUploadInstall(installation_date, installation_remarks, key,
+                user_id, crew_person_id, recce_id, project_id, installation_image);
         call.enqueue(new Callback<UploadInstall>() {
             @Override
             public void onResponse(Call<UploadInstall> call, Response<UploadInstall> response) {
                 String hello = String.valueOf(response.body().getCrew_person_name());
-                Toast.makeText(getBaseContext(),hello,Toast.LENGTH_SHORT).show();
+               // Toast.makeText(getBaseContext(), hello, Toast.LENGTH_SHORT).show();
 
                /* if (response.isSuccessful()){
                     Toast.makeText(getBaseContext(),"successfull ",Toast.LENGTH_SHORT).show();
@@ -98,58 +102,62 @@ public class Sync extends AppCompatActivity {
                 }else {
                     Toast.makeText(getBaseContext(),"Notvsuccessful ",Toast.LENGTH_SHORT).show();
                 }*/
+                index ++;
+                String state = String.valueOf(index);
+                sync_status.setText( state +" Installation Uploaded To Server ");
 
-                DBHelper.updateInstall_Localdb(installation_date_tv,installation_remarks_tv,key_tv,userid_tv,
-                        crew_person_id_tv,recce_id_tv,
-                        project_id_tv,RimgFile_install.getAbsolutePath().toString(),"online_update",Sync.this);
+                DBHelper.updateInstall_Localdb(installation_date_tv, installation_remarks_tv, key_tv, userid_tv,
+                        crew_person_id_tv, recce_id_tv,
+                        project_id_tv, RimgFile_install.getAbsolutePath().toString(), "online_update", Sync.this);
             }
 
             @Override
             public void onFailure(Call<UploadInstall> call, Throwable throwable) {
-                Toast.makeText(getBaseContext(), throwable.toString(), Toast.LENGTH_SHORT).show();
-                DBHelper.updateInstall_Localdb(installation_date_tv,installation_remarks_tv,key_tv,userid_tv,
-                        crew_person_id_tv,recce_id_tv,
-                        project_id_tv,RimgFile_install.getAbsolutePath().toString(),"offline_update",Sync.this);
+               // Toast.makeText(getBaseContext(), throwable.toString(), Toast.LENGTH_SHORT).show();
+                DBHelper.updateInstall_Localdb(installation_date_tv, installation_remarks_tv, key_tv, userid_tv,
+                        crew_person_id_tv, recce_id_tv,
+                        project_id_tv, RimgFile_install.getAbsolutePath().toString(), "offline_update", Sync.this);
 
-                Log.d("message_image",throwable.toString());
+                Log.d("message_image", throwable.toString());
             }
         });
     }
 
 
     public void getRecces_from_local() {
+        index = 0;
         ArrayList<Recce> recces_offline = new ArrayList<Recce>();
         db = openOrCreateDatabase("SAMS", Context.MODE_PRIVATE, null);
-        Toast.makeText(Sync.this, "view my db", Toast.LENGTH_SHORT).show();
+        // Toast.makeText(Sync.this, "view my db", Toast.LENGTH_SHORT).show();
         //  Cursor c=db.rawQuery("SELECT * FROM recce WHERE recce_id='"+email+"' and resume='"+resumename+"'", null);
         Cursor c = db.rawQuery("SELECT * FROM recce WHERE uoms='offline_update'", null);
 
         if (c.moveToFirst()) {
             while (!c.isAfterLast()) {
 
-                 rec_id = c.getString(c.getColumnIndex("recce_id"));
-                 project_id = c.getString(c.getColumnIndex("project_id"));
-                 product_name = c.getString(c.getColumnIndex("product_name"));
-                 uom_id = c.getString(c.getColumnIndex("uom_id"));
-                 uom_name = c.getString(c.getColumnIndex("uom_name"));
-                 outlet_name = c.getString(c.getColumnIndex("outlet_name"));
-                 outlet_address = c.getString(c.getColumnIndex("outlet_address"));
-                 longitude = c.getString(c.getColumnIndex("longitude"));
-                 latitude = c.getString(c.getColumnIndex("latitude"));
-                 width = c.getString(c.getColumnIndex("width"));
-                 height = c.getString(c.getColumnIndex("height"));
-                 width_feet = c.getString(c.getColumnIndex("width_feet"));
-                 height_feet = c.getString(c.getColumnIndex("height_feet"));
-                 width_inches = c.getString(c.getColumnIndex("width_inches"));
-                 height_inches = c.getString(c.getColumnIndex("height_inches"));
+                rec_id = c.getString(c.getColumnIndex("recce_id"));
+                project_id = c.getString(c.getColumnIndex("project_id"));
+                product_name = c.getString(c.getColumnIndex("product_name"));
+                uom_id = c.getString(c.getColumnIndex("uom_id"));
+                uom_name = c.getString(c.getColumnIndex("uom_name"));
+                outlet_name = c.getString(c.getColumnIndex("outlet_name"));
+                outlet_address = c.getString(c.getColumnIndex("outlet_address"));
+                longitude = c.getString(c.getColumnIndex("longitude"));
+                latitude = c.getString(c.getColumnIndex("latitude"));
+                width = c.getString(c.getColumnIndex("width"));
+                height = c.getString(c.getColumnIndex("height"));
+                width_feet = c.getString(c.getColumnIndex("width_feet"));
+                height_feet = c.getString(c.getColumnIndex("height_feet"));
+                width_inches = c.getString(c.getColumnIndex("width_inches"));
+                height_inches = c.getString(c.getColumnIndex("height_inches"));
                 recce_image = c.getString(c.getColumnIndex("recce_image"));
-                 recce_image_1 = c.getString(c.getColumnIndex("recce_image_1"));
-                 recce_image_2 = c.getString(c.getColumnIndex("recce_image_2"));
-                 recce_image_3 = c.getString(c.getColumnIndex("recce_image_3"));
-                 recce_image_4 = c.getString(c.getColumnIndex("recce_image_4"));
-                 product0 = c.getString(c.getColumnIndex("product0"));
+                recce_image_1 = c.getString(c.getColumnIndex("recce_image_1"));
+                recce_image_2 = c.getString(c.getColumnIndex("recce_image_2"));
+                recce_image_3 = c.getString(c.getColumnIndex("recce_image_3"));
+                recce_image_4 = c.getString(c.getColumnIndex("recce_image_4"));
+                product0 = c.getString(c.getColumnIndex("product0"));
                 // JsonElement uoms=c.getString(c.getColumnIndex("uoms"));
-                 recce_image_upload_status = c.getString(c.getColumnIndex("recce_image_upload_status"));
+                recce_image_upload_status = c.getString(c.getColumnIndex("recce_image_upload_status"));
                 Log.d("outlet_name_sync", outlet_name);
                 //  list.add(name);
                 RequestBody key = RequestBody.create(MediaType.parse("text/plain"), Preferences.getKey());
@@ -158,19 +166,19 @@ public class Sync extends AppCompatActivity {
                 RequestBody crew_person_id = RequestBody.create(MediaType.parse("text/plain"), Preferences.getCrewPersonid_project());
 
 
-                 RimgFile = new File(recce_image);
+                RimgFile = new File(recce_image);
                 MultipartBody.Part filePart = MultipartBody.Part.createFormData("recce_image", RimgFile.getName(),
                         RequestBody.create(MediaType.parse("image/*"), RimgFile));
-                  otherImagefile1 = new File(recce_image_1);
+                otherImagefile1 = new File(recce_image_1);
                 MultipartBody.Part imageFilePart1 = MultipartBody.Part.createFormData("recce_image_1", otherImagefile1.getName(),
                         RequestBody.create(MediaType.parse("image/*"), otherImagefile1));
-                  otherImagefile2 = new File(recce_image_2);
+                otherImagefile2 = new File(recce_image_2);
                 MultipartBody.Part imageFilePart2 = MultipartBody.Part.createFormData("recce_image_2", otherImagefile2.getName(),
                         RequestBody.create(MediaType.parse("image/*"), otherImagefile2));
-                  otherImagefile3 = new File(recce_image_3);
+                otherImagefile3 = new File(recce_image_3);
                 MultipartBody.Part imageFilePart3 = MultipartBody.Part.createFormData("recce_image_3", otherImagefile3.getName(),
                         RequestBody.create(MediaType.parse("image/*"), otherImagefile3));
-                  otherImagefile4 = new File(recce_image_4);
+                otherImagefile4 = new File(recce_image_4);
                 MultipartBody.Part imageFilePart4 = MultipartBody.Part.createFormData("recce_image_4", otherImagefile4.getName(),
                         RequestBody.create(MediaType.parse("image/*"), otherImagefile4));
                 RequestBody lat = RequestBody.create(MediaType.parse("text/plain"), latitude);
@@ -209,35 +217,37 @@ public class Sync extends AppCompatActivity {
                 Log.d("Success", "success " + response.code());
                 Log.d("Success", "success " + response.message());
 
-                Toast.makeText(getBaseContext(), " " + response.code(), Toast.LENGTH_SHORT).show();
-                Toast.makeText(getBaseContext(), "   " + response.body().getCrew_person_name(), Toast.LENGTH_SHORT).show();
+               // Toast.makeText(getBaseContext(), " " + response.code(), Toast.LENGTH_SHORT).show();
+               // Toast.makeText(getBaseContext(), "   " + response.body().getCrew_person_name(), Toast.LENGTH_SHORT).show();
                 // Log.d("image",response.body().getCrew_person_name().toString());
-                if (response.isSuccessful()) {
+               /* if (response.isSuccessful()) {
                     Toast.makeText(getBaseContext(), "successfull ", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(getBaseContext(), "Notvsuccessful ", Toast.LENGTH_SHORT).show();
-                }
-
+                }*/
+               index ++;
+                String state = String.valueOf(index);
+                sync_status.setText( state +"  Recce Uploaded To Server ");
 
                 DBHelper.updateRecce_Localdb(uom_id, width, Preferences.getKey(), Preferences.getUserid()
                         , Preferences.getCrewPersonid_project(), height
                         , width_feet, height_feet, width_inches, height_inches, rec_id, RimgFile.getAbsolutePath().toString(),
                         otherImagefile1.getAbsolutePath().toString(), otherImagefile2.getAbsolutePath().toString()
                         , otherImagefile3.getAbsolutePath().toString(), otherImagefile4.getAbsolutePath().toString(),
-                        "20.22", "20.22", "vizag", Preferences.getProjectId(), "online_update", "COMPLETED",Sync.this);
+                        "20.22", "20.22", "vizag", Preferences.getProjectId(), "online_update", "COMPLETED", Sync.this);
 
             }
 
             @Override
             public void onFailure(Call<UploadRecce> call, Throwable throwable) {
-                Toast.makeText(getBaseContext(), throwable.toString(), Toast.LENGTH_SHORT).show();
+              //  Toast.makeText(getBaseContext(), throwable.toString(), Toast.LENGTH_SHORT).show();
                 Log.d("message_image", throwable.toString());
                 DBHelper.updateRecce_Localdb(uom_id, width, Preferences.getKey(), Preferences.getUserid()
                         , Preferences.getCrewPersonid_project(), height
                         , width_feet, height_feet, width_inches, height_inches, rec_id, RimgFile.getAbsolutePath().toString(),
                         otherImagefile1.getAbsolutePath().toString(), otherImagefile2.getAbsolutePath().toString()
                         , otherImagefile3.getAbsolutePath().toString(), otherImagefile4.getAbsolutePath().toString(),
-                        "20.22", "20.22", "vizag", Preferences.getProjectId(), "offline_update", "NOT COMPLETED",Sync.this);
+                        "20.22", "20.22", "vizag", Preferences.getProjectId(), "offline_update", "NOT COMPLETED", Sync.this);
 
             }
         });
