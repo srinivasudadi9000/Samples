@@ -199,7 +199,7 @@ public class Update_Install extends Activity {
 
 
         db.close();
-        Intent recce_display= new Intent(Update_Install.this,Recces_display.class);
+        Intent recce_display= new Intent(Update_Install.this,Install_display.class);
         startActivity(recce_display);
         finish();
         Log.d("success", "successfully updated recce");

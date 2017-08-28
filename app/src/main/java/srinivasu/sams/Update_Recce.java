@@ -115,7 +115,7 @@ public class Update_Recce extends Activity {
         address = getIntent().getStringExtra("address");
         latitude = getIntent().getStringExtra("latitude");
         longitude = getIntent().getStringExtra("longitude");
-        Toast.makeText(getBaseContext(),latitude+" "+longitude,Toast.LENGTH_SHORT).show();
+      //  Toast.makeText(getBaseContext(),latitude+" "+longitude,Toast.LENGTH_SHORT).show();
         otherImagefile1 = new File(getExternalCacheDir(), "noimage.png");
         otherImagefile2 = new File(getExternalCacheDir(), "noimage.png");
         otherImagefile3 = new File(getExternalCacheDir(), "noimage.png");
@@ -212,10 +212,10 @@ public class Update_Recce extends Activity {
         tvRheight.setText(height);
         Bitmap bmImage = null;
         if (!Validation.internet(Update_Recce.this)) {
-            Toast.makeText(getBaseContext(),mainpic.toString(),Toast.LENGTH_SHORT).show();
+          /*  Toast.makeText(getBaseContext(),mainpic.toString(),Toast.LENGTH_SHORT).show();
             Toast.makeText(getBaseContext(),image1.toString(),Toast.LENGTH_SHORT).show();
             Toast.makeText(getBaseContext(),image2.toString(),Toast.LENGTH_SHORT).show();
-            Toast.makeText(getBaseContext(),image3.toString(),Toast.LENGTH_SHORT).show();
+            Toast.makeText(getBaseContext(),image3.toString(),Toast.LENGTH_SHORT).show();*/
             if (mainpic.contains("noimage.png") || !mainpic.contains("storage")){
                 ivRecceImage.setImageResource(R.drawable.dummy);
             }else {
@@ -358,7 +358,7 @@ public class Update_Recce extends Activity {
 
     @OnClick(R.id.ivRecceImage)
     public void recceMan() {
-        Toast.makeText(getBaseContext(), "hello", Toast.LENGTH_SHORT).show();
+     //   Toast.makeText(getBaseContext(), "hello", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(Update_Recce.this, CanvasEdit.class);
         intent.putExtra("width", tvRwidth.getText().toString());
         intent.putExtra("height", tvRheight.getText().toString());
@@ -534,16 +534,16 @@ public class Update_Recce extends Activity {
                 Log.d("Success", "success " + response.code());
                 Log.d("Success", "success " + response.message());
 
-                Toast.makeText(getBaseContext(), " " + response.code(), Toast.LENGTH_SHORT).show();
+               /* Toast.makeText(getBaseContext(), " " + response.code(), Toast.LENGTH_SHORT).show();
                 Toast.makeText(getBaseContext(), "   " + response.body().getCrew_person_name(), Toast.LENGTH_SHORT).show();
-                // Log.d("image",response.body().getCrew_person_name().toString());
+              *//*  // Log.d("image",response.body().getCrew_person_name().toString());
                 if (response.isSuccessful()) {
                     Toast.makeText(getBaseContext(), "successfull ", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(getBaseContext(), "Notvsuccessful ", Toast.LENGTH_SHORT).show();
-                }
+                }*/
                 updateRecce_Localdb(uomid, tvRwidth.getText().toString(), tvRheight.getText().toString()
-                        , "22", "22", "2", "2", Preferences.getKey(), Preferences.getUserid(), Preferences.getCrewPersonid_project()
+                        , width_feet, height_feet, width_inch, height_inch, Preferences.getKey(), Preferences.getUserid(), Preferences.getCrewPersonid_project()
                         , getIntent().getStringExtra("recce_id").toString(), iv_urlRC,
                         otherImagefile1.getAbsolutePath().toString(), otherImagefile2.getAbsolutePath().toString()
                         , otherImagefile3.getAbsolutePath().toString(), otherImagefile4.getAbsolutePath().toString(),
@@ -556,11 +556,11 @@ public class Update_Recce extends Activity {
                 Toast.makeText(getBaseContext(), throwable.toString(), Toast.LENGTH_SHORT).show();
                 Log.d("message_image", throwable.toString());
                 updateRecce_Localdb(uomid, tvRwidth.getText().toString(), tvRheight.getText().toString()
-                        , "22", "22", "2", "2", Preferences.getKey(), Preferences.getUserid(), Preferences.getCrewPersonid_project()
+                        , width_feet, height_feet, width_inch, height_inch, Preferences.getKey(), Preferences.getUserid(), Preferences.getCrewPersonid_project()
                         , getIntent().getStringExtra("recce_id").toString(), iv_urlRC,
                         otherImagefile1.getAbsolutePath().toString(), otherImagefile2.getAbsolutePath().toString()
                         , otherImagefile3.getAbsolutePath().toString(), otherImagefile4.getAbsolutePath().toString(),
-                        "20.22", "20.22", "vizag", Preferences.getProjectId(), "offline_update", "COMPLETED");
+                        latitude, longitude, address, Preferences.getProjectId(), "offline_update", "NOT COMPLETED");
 
             }
         });

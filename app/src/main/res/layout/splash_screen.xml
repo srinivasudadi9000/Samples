@@ -4,13 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#fd5822"
+    android:background="@drawable/samssplashtwo"
     tools:context="srinivasu.sams.SplashScreen">
      <TextView
          android:textColor="#ffffff"
          android:textSize="20dp"
          android:textStyle="bold"
          android:gravity="center"
+         android:visibility="gone"
          android:text="hi srinivasu welcome page ra babu.....!! wait "
          android:layout_width="match_parent"
          android:layout_height="match_parent" />

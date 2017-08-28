@@ -42,7 +42,7 @@ public class Login extends Activity {
     Button login_btn;
     String validation_vendor_name = null;
     TelephonyManager manager;
-    String imenumber1, imenumber2;
+    String imenumber1=null, imenumber2=null;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -107,17 +107,22 @@ public class Login extends Activity {
     public void appLogin() {
 
         ApiInterface apiService = ApiClient.getSams().create(ApiInterface.class);
-       Call<Appopen> call = apiService.getVendors("862114032689487", "111111111111111");
-      //  Call<Appopen> call = apiService.getVendors(imenumber1, imenumber2);
+       Call<Appopen> call = apiService.getVendors("862114032689487", "1111111111111");
+       // Call<Appopen> call = apiService.getVendors(imenumber1, imenumber2);
         call.enqueue(new Callback<Appopen>() {
             @Override
             public void onResponse(Call<Appopen> call, Response<Appopen> response) {
                 // String size = String.valueOf(response.body().getList().size());
 
-                //     Toast.makeText(getBaseContext(), "   " + response.body().getStatus(), Toast.LENGTH_SHORT).show();
-                vendors = response.body().getVendors_list();
-                login_spinner = new Login_spinner(Login.this, vendors);
-                spinner_login.setAdapter(login_spinner);
+                String result = String.valueOf(response.code());
+                if (result.equals("200")){
+                    Toast.makeText(getBaseContext(), "   " + response.code(), Toast.LENGTH_SHORT).show();
+                    vendors = response.body().getVendors_list();
+                    login_spinner = new Login_spinner(Login.this, vendors);
+                    spinner_login.setAdapter(login_spinner);
+                }else{
+                    Toast.makeText(getBaseContext(),"you are not authorized person",Toast.LENGTH_SHORT).show();
+                }
 /*
                 for (int i = 0; i < weather.size(); i++) {
                     Toast.makeText(getBaseContext(), weather.get(i).getVendor_name().toString(), Toast.LENGTH_SHORT).show();
