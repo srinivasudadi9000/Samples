@@ -220,7 +220,7 @@ public class Sync extends Activity {
                         , width_feet, height_feet, width_inches, height_inches, rec_id, RimgFile.getAbsolutePath().toString(),
                         otherImagefile1.getAbsolutePath().toString(), otherImagefile2.getAbsolutePath().toString()
                         , otherImagefile3.getAbsolutePath().toString(), otherImagefile4.getAbsolutePath().toString(),
-                        "20.22", "20.22", "vizag", Preferences.getProjectId(), "online_update", "COMPLETED", Sync.this);
+                        "20.22", "20.22", "vizag", Preferences.getProjectId(), "online_update", "Completed", Sync.this);
                 getRecces_from_local();
 
             }
@@ -235,7 +235,7 @@ public class Sync extends Activity {
                         , width_feet, height_feet, width_inches, height_inches, rec_id, RimgFile.getAbsolutePath().toString(),
                         otherImagefile1.getAbsolutePath().toString(), otherImagefile2.getAbsolutePath().toString()
                         , otherImagefile3.getAbsolutePath().toString(), otherImagefile4.getAbsolutePath().toString(),
-                        "20.22", "20.22", "vizag", Preferences.getProjectId(), "offline_update", "NOT COMPLETED", Sync.this);
+                        "20.22", "20.22", "vizag", Preferences.getProjectId(), "offline_update", "Completed", Sync.this);
 
             }
         });

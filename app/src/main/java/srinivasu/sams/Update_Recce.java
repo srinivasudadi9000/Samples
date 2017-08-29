@@ -547,20 +547,20 @@ public class Update_Recce extends Activity {
                         , getIntent().getStringExtra("recce_id").toString(), iv_urlRC,
                         otherImagefile1.getAbsolutePath().toString(), otherImagefile2.getAbsolutePath().toString()
                         , otherImagefile3.getAbsolutePath().toString(), otherImagefile4.getAbsolutePath().toString(),
-                        latitude, longitude, address, Preferences.getProjectId(), "online_update", "COMPLETED");
+                        latitude, longitude, address, Preferences.getProjectId(), "online_update", "Completed");
 
             }
 
             @Override
             public void onFailure(Call<UploadRecce> call, Throwable throwable) {
-                Toast.makeText(getBaseContext(), throwable.toString(), Toast.LENGTH_SHORT).show();
+               // Toast.makeText(getBaseContext(), throwable.toString(), Toast.LENGTH_SHORT).show();
                 Log.d("message_image", throwable.toString());
                 updateRecce_Localdb(uomid, tvRwidth.getText().toString(), tvRheight.getText().toString()
                         , width_feet, height_feet, width_inch, height_inch, Preferences.getKey(), Preferences.getUserid(), Preferences.getCrewPersonid_project()
                         , getIntent().getStringExtra("recce_id").toString(), iv_urlRC,
                         otherImagefile1.getAbsolutePath().toString(), otherImagefile2.getAbsolutePath().toString()
                         , otherImagefile3.getAbsolutePath().toString(), otherImagefile4.getAbsolutePath().toString(),
-                        latitude, longitude, address, Preferences.getProjectId(), "offline_update", "NOT COMPLETED");
+                        latitude, longitude, address, Preferences.getProjectId(), "offline_update", "Completed");
 
             }
         });

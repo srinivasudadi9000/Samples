@@ -96,19 +96,21 @@ public class Update_Install extends Activity {
         RequestBody crew_person_id = RequestBody.create(MediaType.parse("text/plain"), "33");
         RequestBody recce_id = RequestBody.create(MediaType.parse("text/plain"), "2312");
         RequestBody project_id = RequestBody.create(MediaType.parse("text/plain"), "4");*/
-        RequestBody key = RequestBody.create(MediaType.parse("text/plain"), Preferences.getKey());
-        RequestBody userid = RequestBody.create(MediaType.parse("text/plain"), Preferences.getUserid());
-        RequestBody crew_person_id = RequestBody.create(MediaType.parse("text/plain"), Preferences.getCrewPersonid_project());
-        RequestBody recce_id = RequestBody.create(MediaType.parse("text/plain"), getIntent().getStringExtra("recce_id").toString());
-        RequestBody project_id = RequestBody.create(MediaType.parse("text/plain"), Preferences.getProjectId().toString());
-        MultipartBody.Part imageFilePart1 = MultipartBody.Part.createFormData("installation_image", installimage.getName(),
-                RequestBody.create(MediaType.parse("image/*"), installimage));
-        if (iv_url1.toString()!=null){
-            updateInstall(InstallationDate_et.getText().toString(),InstallationRemarks_et.getText().toString(),
-                    key,userid,crew_person_id,recce_id,project_id,imageFilePart1);
-        }else {
-            Toast.makeText(getBaseContext(),"please fill all the details",Toast.LENGTH_SHORT).show();
-        }
+       if (iv_url1 == null){
+           Toast.makeText(Update_Install.this,"Please Take Installation Pic ",Toast.LENGTH_SHORT).show();
+       }else {
+
+           RequestBody key = RequestBody.create(MediaType.parse("text/plain"), Preferences.getKey());
+           RequestBody userid = RequestBody.create(MediaType.parse("text/plain"), Preferences.getUserid());
+           RequestBody crew_person_id = RequestBody.create(MediaType.parse("text/plain"), Preferences.getCrewPersonid_project());
+           RequestBody recce_id = RequestBody.create(MediaType.parse("text/plain"), getIntent().getStringExtra("recce_id").toString());
+           RequestBody project_id = RequestBody.create(MediaType.parse("text/plain"), Preferences.getProjectId().toString());
+           MultipartBody.Part imageFilePart1 = MultipartBody.Part.createFormData("installation_image", installimage.getName(),
+                   RequestBody.create(MediaType.parse("image/*"), installimage));
+           updateInstall(InstallationDate_et.getText().toString(),InstallationRemarks_et.getText().toString(),
+                   key,userid,crew_person_id,recce_id,project_id,imageFilePart1);
+
+       }
         //updateInstall("21-2-2017","asdfasdf",key,userid,crew_person_id,recce_id,project_id,imageFilePart1);
     }
     @OnClick(R.id.mybutton_click)

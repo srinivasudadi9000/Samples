@@ -18,7 +18,9 @@ import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -117,7 +119,13 @@ public class InstallAdapter extends RecyclerView.Adapter<InstallAdapter.Reccehol
                     Intent updateinstall = new Intent(context, Update_Install.class);
                     updateinstall.putExtra("recce_id", installations.get(getAdapterPosition()).getRecce_id().toString());
                     if (installations.get(getAdapterPosition()).getInstallation_date().toString() != null) {
-                        updateinstall.putExtra("install_date", installations.get(getAdapterPosition()).getInstallation_date().toString());
+                        if (installations.get(getAdapterPosition()).getInstallation_date().toString().equals("0000-00-00")){
+                            Date cDate = new Date();
+                            String fDate = new SimpleDateFormat("yyyy-MM-dd").format(cDate);
+                            updateinstall.putExtra("install_date", fDate);
+                        }else{
+                            updateinstall.putExtra("install_date", installations.get(getAdapterPosition()).getInstallation_date().toString());
+                        }
                     } else {
                         updateinstall.putExtra("install_date", installdate);
                     }

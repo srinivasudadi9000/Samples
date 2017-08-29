@@ -2,9 +2,11 @@ package srinivasu.sams;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -106,6 +108,9 @@ public class Install_display extends Activity {
                 installadapter = new InstallAdapter(installations, R.layout.install_single, getApplicationContext());
                 install_recyler.setAdapter(installadapter);
                 new DBHelper( installations , Install_display.this,"install");
+                if (install_recyler.getAdapter().getItemCount() ==0) {
+                    showalert();
+                }
 
             }
 
@@ -164,8 +169,28 @@ public class Install_display extends Activity {
         }
         installadapter =new InstallAdapter(install_offline, R.layout.recee_single, getApplicationContext());
         install_recyler.setAdapter(installadapter);
+        if (install_recyler.getAdapter().getItemCount() ==0) {
+            showalert();
+        }
     }
 
 
+    public void showalert() {
+        AlertDialog.Builder alertbox = new AlertDialog.Builder(Install_display.this);
+        alertbox.setMessage("Sorry!! No Installations Found Thankyou ");
+        alertbox.setTitle("Sams");
+        alertbox.setIcon(R.drawable.samslogofinal);
+
+        alertbox.setPositiveButton("OK",
+                new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface arg0,
+                                        int arg1) {
+                        finish();
+                    }
+                });
+
+        alertbox.show();
+    }
 
 }

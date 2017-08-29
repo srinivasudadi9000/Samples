@@ -2,10 +2,12 @@ package srinivasu.sams;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -47,7 +49,8 @@ public class Recces_display extends Activity {
     @BindView(R.id.spFilter)
     Spinner spFilter;
     String position;
-    List<Products> productses= null;
+    List<Products> productses = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,12 +71,12 @@ public class Recces_display extends Activity {
         //
         if (!Validation.internet(Recces_display.this)) {
             getRecces_from_local();
-            Toast.makeText(getBaseContext(), "local db recces", Toast.LENGTH_LONG).show();
+           // Toast.makeText(getBaseContext(), "local db recces", Toast.LENGTH_LONG).show();
         } else {
             getRecceslist();
-            if (Preferences.getProducts().equals("notdone")){
+            if (Preferences.getProducts().equals("notdone")) {
                 getProductlist();
-            }else {
+            } else {
                 Preferences.setProducts("done");
             }
         }
@@ -110,12 +113,13 @@ public class Recces_display extends Activity {
             }
         });
 
+
     }
 
     @OnClick(R.id.fabAddRecce)
     public void addrecce_web() {
         Intent intent = new Intent(getApplicationContext(), AddRecceWeb.class);
-        intent.putExtra("path","create");
+        intent.putExtra("path", "create");
         intent.putExtra("url", "http://sams.mmos.in/sams/web/index.php?r=app-outlets/app-recce-create&user_id=" + Preferences.getUserid() + "&crew_person_id=" + Preferences.getCrewPersonid_project() + "&project_id=" + Preferences.getProjectId());
         startActivity(intent);
     }
@@ -128,7 +132,7 @@ public class Recces_display extends Activity {
     public void getRecces_from_local() {
         ArrayList<Recce> recces_offline = new ArrayList<Recce>();
         db = openOrCreateDatabase("SAMS", Context.MODE_PRIVATE, null);
-        Toast.makeText(Recces_display.this, "view my db", Toast.LENGTH_SHORT).show();
+       // Toast.makeText(Recces_display.this, "view my db", Toast.LENGTH_SHORT).show();
         //  Cursor c=db.rawQuery("SELECT * FROM recce WHERE recce_id='"+email+"' and resume='"+resumename+"'", null);
         Cursor c = db.rawQuery("SELECT * FROM recce WHERE project_id='" + Preferences.getProjectId().toString() + "'", null);
 
@@ -172,6 +176,11 @@ public class Recces_display extends Activity {
         }
         recceAdapter = new RecceAdapter(recces_offline, R.layout.recee_single, getApplicationContext());
         recee_recyler.setAdapter(recceAdapter);
+
+        if (recee_recyler.getAdapter().getItemCount() ==0) {
+            showalert();
+        }
+
     }
 
     public void getRecceslist() {
@@ -195,11 +204,15 @@ public class Recces_display extends Activity {
                 recceAdapter = new RecceAdapter(recces, R.layout.recee_single, getApplicationContext());
                 recee_recyler.setAdapter(recceAdapter);
 
+                if (recee_recyler.getAdapter().getItemCount() ==0) {
+                    showalert();
+                }
+
             }
 
             @Override
             public void onFailure(Call<GetRecce> call, Throwable throwable) {
-                Toast.makeText(getBaseContext(), throwable.toString(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getBaseContext(), "Please Check Your Internet Connection ", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -220,7 +233,7 @@ public class Recces_display extends Activity {
                 //productAdapter = new ProductAdapter(productses, R.layout.single_product, getApplicationContext());
                 //product_recyler.setAdapter(productAdapter);
                 Preferences.setProducts("done");
-                new DBHelper( productses , Recces_display.this,"product","","");
+                new DBHelper(productses, Recces_display.this, "product", "", "");
 
             }
 
@@ -252,5 +265,21 @@ public class Recces_display extends Activity {
         }
     }
 
+    public void showalert() {
+        AlertDialog.Builder alertbox = new AlertDialog.Builder(Recces_display.this);
+        alertbox.setMessage("Sorry!! No Recces Found Thankyou ");
+        alertbox.setTitle("Sams");
+        alertbox.setIcon(R.drawable.samslogofinal);
 
+        alertbox.setPositiveButton("OK",
+                new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface arg0,
+                                        int arg1) {
+                        finish();
+                    }
+                });
+
+        alertbox.show();
+    }
 }

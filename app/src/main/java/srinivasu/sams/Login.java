@@ -93,22 +93,22 @@ public class Login extends Activity {
 
     @OnClick(R.id.login_btn)
     public void onclick() {
-        /*if (validation_vendor_name !=null){
+        if (validation_vendor_name !=null){
             Intent i = new Intent(Login.this, Home.class);
             startActivity(i);
         }else {
-            Toast.makeText(getBaseContext(),"Unable to proceed try again with proper internet connection !!!",Toast.LENGTH_LONG).show();
-        }*/
-        Intent i = new Intent(Login.this, Home.class);
-        startActivity(i);
+            Toast.makeText(getBaseContext(),"You are not authorized to proceed !!!",Toast.LENGTH_LONG).show();
+        }
+        /*Intent i = new Intent(Login.this, Home.class);
+        startActivity(i);*/
     }
 
 
     public void appLogin() {
 
         ApiInterface apiService = ApiClient.getSams().create(ApiInterface.class);
-       Call<Appopen> call = apiService.getVendors("862114032689487", "1111111111111");
-       // Call<Appopen> call = apiService.getVendors(imenumber1, imenumber2);
+       Call<Appopen> call = apiService.getVendors("862114032689487", "862114032689495");
+        //Call<Appopen> call = apiService.getVendors(imenumber1, imenumber2);
         call.enqueue(new Callback<Appopen>() {
             @Override
             public void onResponse(Call<Appopen> call, Response<Appopen> response) {
@@ -116,7 +116,7 @@ public class Login extends Activity {
 
                 String result = String.valueOf(response.code());
                 if (result.equals("200")){
-                    Toast.makeText(getBaseContext(), "   " + response.code(), Toast.LENGTH_SHORT).show();
+                //    Toast.makeText(getBaseContext(), "   " + response.code(), Toast.LENGTH_SHORT).show();
                     vendors = response.body().getVendors_list();
                     login_spinner = new Login_spinner(Login.this, vendors);
                     spinner_login.setAdapter(login_spinner);
@@ -132,7 +132,7 @@ public class Login extends Activity {
 
             @Override
             public void onFailure(Call<Appopen> call, Throwable throwable) {
-                Toast.makeText(getBaseContext(), throwable.toString(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getBaseContext(), "Please Check Your Internet Connection ", Toast.LENGTH_SHORT).show();
             }
         });
     }

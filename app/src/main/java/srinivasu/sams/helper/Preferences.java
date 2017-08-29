@@ -58,9 +58,9 @@ public class Preferences  {
         SharedPreferences projectid = context.getSharedPreferences("PROJECT_ID",context.MODE_PRIVATE);
         return projectid.getString("project_id","");
     }
-    public static void setreeceId_product(String projectId){
+    public static void setreeceId_product(String recceId){
         SharedPreferences.Editor project = context.getSharedPreferences("RECCE_ID", context.MODE_PRIVATE).edit();
-        project.putString("recce_id",projectId);
+        project.putString("recce_id",recceId);
         project.commit();
     }
     public static String getreeceId_product(){

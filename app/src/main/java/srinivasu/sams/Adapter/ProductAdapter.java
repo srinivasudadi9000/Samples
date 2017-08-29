@@ -69,7 +69,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.Reccehol
                 public void onClick(View v) {
                     ;
                     db = context.openOrCreateDatabase("SAMS", Context.MODE_PRIVATE, null);
-                    db.execSQL("UPDATE recce SET product_name='" + productses.get(getAdapterPosition()).getProduct_name() + "'" + "WHERE recce_id=" + Preferences.getreeceId_product());
+                    db.execSQL("UPDATE recce SET product_name='" + productses.get(getAdapterPosition()).getProduct_name() + "'" + "  WHERE recce_id=" + Preferences.getreeceId_product());
                     Intent i = new Intent(context,Recces_display.class);
                     itemView.getContext().startActivity(i);
                     ((Activity)itemView.getContext()).finish();

@@ -2,9 +2,11 @@ package srinivasu.sams;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -76,6 +78,9 @@ public class Project extends Activity {
             }
         }
         project_recyler.setAdapter(new ProjectAdapter(project_offline, R.layout.project_single, Project.this));
+        if (project_recyler.getAdapter().getItemCount() ==0) {
+            showalert();
+        }
        // Toast.makeText(Project.this, "call update project", Toast.LENGTH_SHORT).show();
        // updateProject_Localdb("6","srinivasu_offline");
     }
@@ -104,7 +109,9 @@ public class Project extends Activity {
                 List<Projects> projects = response.body().getProjects();
                 project_recyler.setAdapter(new ProjectAdapter(projects, R.layout.project_single, getApplicationContext()));
                 new DBHelper(projects, Project.this, null, null);
-
+                if (project_recyler.getAdapter().getItemCount() ==0) {
+                    showalert();
+                }
               /*  String xx = String.valueOf(projects.size());
                 Toast.makeText(getBaseContext(),xx.toString(),Toast.LENGTH_SHORT).show();
                 for (int i = 0; i < projects.size(); i++) {
@@ -122,6 +129,23 @@ public class Project extends Activity {
     public void updateProject_Localdb(String project_id, String project_name) {
         db = openOrCreateDatabase("SAMS", Context.MODE_PRIVATE, null);
         db.execSQL("UPDATE project SET project_name='" + project_name + "'"+"WHERE project_id="+project_id);
+    }
+    public void showalert() {
+        AlertDialog.Builder alertbox = new AlertDialog.Builder(Project.this);
+        alertbox.setMessage("Sorry!! No Projects Found Thankyou ");
+        alertbox.setTitle("Sams");
+        alertbox.setIcon(R.drawable.samslogofinal);
+
+        alertbox.setPositiveButton("OK",
+                new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface arg0,
+                                        int arg1) {
+                       finish();
+                    }
+                });
+
+        alertbox.show();
     }
 
 
