@@ -18,6 +18,8 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import butterknife.BindView;
@@ -177,6 +179,15 @@ public class Recces_display extends Activity {
         recceAdapter = new RecceAdapter(recces_offline, R.layout.recee_single, getApplicationContext());
         recee_recyler.setAdapter(recceAdapter);
 
+        Collections.sort(recces_offline, new Comparator<Recce>() {
+            @Override
+            public int compare(Recce o1, Recce o2) {
+                return o1.getOutlet_name().compareTo(o2.getOutlet_name());
+            }
+
+        });
+        recceAdapter.notifyDataSetChanged();
+
         if (recee_recyler.getAdapter().getItemCount() ==0) {
             showalert();
         }
@@ -198,14 +209,27 @@ public class Recces_display extends Activity {
                     Toast.makeText(getBaseContext(), "   " + Umo.get(j).getUom_name(), Toast.LENGTH_SHORT).show();
 
                 }*/
-                recces = response.body().getRecces();
-                new DBHelper(recces, Recces_display.this);
+                String result = String.valueOf(response.code());
+                if (result.equals("200")) {
+                    recces = response.body().getRecces();
+                    new DBHelper(recces, Recces_display.this);
 
-                recceAdapter = new RecceAdapter(recces, R.layout.recee_single, getApplicationContext());
-                recee_recyler.setAdapter(recceAdapter);
+                    recceAdapter = new RecceAdapter(recces, R.layout.recee_single, getApplicationContext());
+                    recee_recyler.setAdapter(recceAdapter);
 
-                if (recee_recyler.getAdapter().getItemCount() ==0) {
-                    showalert();
+                    Collections.sort(recces, new Comparator<Recce>() {
+                        @Override
+                        public int compare(Recce o1, Recce o2) {
+                            return o1.getOutlet_name().compareTo(o2.getOutlet_name());
+                        }
+
+                    });
+                    recceAdapter.notifyDataSetChanged();
+                    if (recee_recyler.getAdapter().getItemCount() == 0) {
+                        showalert();
+                    }
+                }else {
+                    Toast.makeText(getBaseContext(), "Please Check Your Internet Connection ", Toast.LENGTH_SHORT).show();
                 }
 
             }
@@ -227,13 +251,16 @@ public class Recces_display extends Activity {
         call.enqueue(new Callback<GetProducts>() {
             @Override
             public void onResponse(Call<GetProducts> call, Response<GetProducts> response) {
-                productses = response.body().getProductses();
-                String size = String.valueOf(productses.size());
-                //Toast.makeText(getBaseContext(),size,Toast.LENGTH_SHORT).show();
-                //productAdapter = new ProductAdapter(productses, R.layout.single_product, getApplicationContext());
-                //product_recyler.setAdapter(productAdapter);
-                Preferences.setProducts("done");
-                new DBHelper(productses, Recces_display.this, "product", "", "");
+                String result = String.valueOf(response.code());
+                if (result.equals("200")) {
+                    productses = response.body().getProductses();
+                    String size = String.valueOf(productses.size());
+                    //Toast.makeText(getBaseContext(),size,Toast.LENGTH_SHORT).show();
+                    //productAdapter = new ProductAdapter(productses, R.layout.single_product, getApplicationContext());
+                    //product_recyler.setAdapter(productAdapter);
+                    Preferences.setProducts("done");
+                    new DBHelper(productses, Recces_display.this, "product", "", "");
+                }
 
             }
 

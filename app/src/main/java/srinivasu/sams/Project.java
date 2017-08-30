@@ -94,29 +94,33 @@ public class Project extends Activity {
             @Override
             public void onResponse(Call<Login_Service> call, Response<Login_Service> response) {
                 // String size = String.valueOf(response.body().getList().size());
-                Log.d("key", response.body().getKey().toString());
-                Log.d("crewperson", response.body().getCrew_person_name().toString());
-                Log.d("userid", response.body().getUser_id().toString());
-                Log.d("getcrewpersonid", response.body().getCrew_person_id().toString());
-                if (response.body().getKey().toString() != null || response.body().getCrew_person_name().toString() != null
-                        || response.body().getUser_id().toString() != null){
-                    Preferences.setProject(response.body().getKey().toString(), response.body().getUser_id().toString(),
-                            response.body().getCrew_person_id().toString());
-                }else {
-                    Preferences.setProject("", "",response.body().getCrew_person_id().toString());
-                }
+                String result = String.valueOf(response.code());
+                if (result.equals("200")) {
 
-                List<Projects> projects = response.body().getProjects();
-                project_recyler.setAdapter(new ProjectAdapter(projects, R.layout.project_single, getApplicationContext()));
-                new DBHelper(projects, Project.this, null, null);
-                if (project_recyler.getAdapter().getItemCount() ==0) {
-                    showalert();
-                }
+                    Log.d("key", response.body().getKey().toString());
+                    Log.d("crewperson", response.body().getCrew_person_name().toString());
+                    Log.d("userid", response.body().getUser_id().toString());
+                    Log.d("getcrewpersonid", response.body().getCrew_person_id().toString());
+                    if (response.body().getKey().toString() != null || response.body().getCrew_person_name().toString() != null
+                            || response.body().getUser_id().toString() != null) {
+                        Preferences.setProject(response.body().getKey().toString(), response.body().getUser_id().toString(),
+                                response.body().getCrew_person_id().toString());
+                    } else {
+                        Preferences.setProject("", "", response.body().getCrew_person_id().toString());
+                    }
+
+                    List<Projects> projects = response.body().getProjects();
+                    project_recyler.setAdapter(new ProjectAdapter(projects, R.layout.project_single, getApplicationContext()));
+                    new DBHelper(projects, Project.this, null, null);
+                    if (project_recyler.getAdapter().getItemCount() == 0) {
+                        showalert();
+                    }
               /*  String xx = String.valueOf(projects.size());
                 Toast.makeText(getBaseContext(),xx.toString(),Toast.LENGTH_SHORT).show();
                 for (int i = 0; i < projects.size(); i++) {
                     Toast.makeText(getBaseContext(), projects.get(i).getProject_name().toString(), Toast.LENGTH_SHORT).show();
                 }*/
+                }
             }
 
             @Override

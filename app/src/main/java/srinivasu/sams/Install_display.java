@@ -104,14 +104,16 @@ public class Install_display extends Activity {
         call.enqueue(new Callback<GetInstall>() {
             @Override
             public void onResponse(Call<GetInstall> call, Response<GetInstall> response) {
-                installations = response.body().getRecces();
-                installadapter = new InstallAdapter(installations, R.layout.install_single, getApplicationContext());
-                install_recyler.setAdapter(installadapter);
-                new DBHelper( installations , Install_display.this,"install");
-                if (install_recyler.getAdapter().getItemCount() ==0) {
-                    showalert();
+                String result = String.valueOf(response.code());
+                if (result.equals("200")) {
+                    installations = response.body().getRecces();
+                    installadapter = new InstallAdapter(installations, R.layout.install_single, getApplicationContext());
+                    install_recyler.setAdapter(installadapter);
+                    new DBHelper(installations, Install_display.this, "install");
+                    if (install_recyler.getAdapter().getItemCount() == 0) {
+                        showalert();
+                    }
                 }
-
             }
 
             @Override
