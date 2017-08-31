@@ -5,7 +5,7 @@
     android:id="@+id/activity_update_installation"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="srinivasu.sams.Update_Install">
+    tools:context="srinivasu.sams.Activity.Update_Install">
     <LinearLayout
         android:background="@color/colorPrimary"
         android:orientation="horizontal"

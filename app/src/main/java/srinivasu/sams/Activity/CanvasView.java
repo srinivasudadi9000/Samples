@@ -1,4 +1,4 @@
-package srinivasu.sams;
+package srinivasu.sams.Activity;
 
 
 import android.content.Context;

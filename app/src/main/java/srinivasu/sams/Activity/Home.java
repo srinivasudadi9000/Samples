@@ -1,4 +1,4 @@
-package srinivasu.sams;
+package srinivasu.sams.Activity;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -13,6 +13,7 @@ import java.util.Date;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import srinivasu.sams.R;
 import srinivasu.sams.helper.Preferences;
 
 public class Home extends Activity {

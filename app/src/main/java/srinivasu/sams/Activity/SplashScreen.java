@@ -1,4 +1,4 @@
-package srinivasu.sams;
+package srinivasu.sams.Activity;
 
 import android.Manifest;
 import android.app.Activity;
@@ -10,6 +10,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.widget.ImageView;
 
+import srinivasu.sams.R;
 import srinivasu.sams.helper.DBHelper;
 import srinivasu.sams.helper.Preferences;
 

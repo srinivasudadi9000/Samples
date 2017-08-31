@@ -11,9 +11,9 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import srinivasu.sams.Install_display;
+import srinivasu.sams.Activity.Install_display;
 import srinivasu.sams.R;
-import srinivasu.sams.Recces_display;
+import srinivasu.sams.Activity.Recces_display;
 import srinivasu.sams.helper.Preferences;
 import srinivasu.sams.model.Projects;
 

@@ -1,4 +1,4 @@
-package srinivasu.sams;
+package srinivasu.sams.Activity;
 
 import android.Manifest;
 import android.app.Activity;
@@ -49,6 +49,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.http.Part;
 import retrofit2.http.Query;
+import srinivasu.sams.R;
 import srinivasu.sams.helper.Calulations;
 import srinivasu.sams.helper.Preferences;
 import srinivasu.sams.model.UploadRecce;

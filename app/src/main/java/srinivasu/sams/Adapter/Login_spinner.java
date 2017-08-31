@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import srinivasu.sams.Login;
+import srinivasu.sams.Activity.Login;
 import srinivasu.sams.R;
 import srinivasu.sams.model.Vendor;
 

@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Locale;
 
 import srinivasu.sams.R;
-import srinivasu.sams.Update_Install;
+import srinivasu.sams.Activity.Update_Install;
 import srinivasu.sams.model.Installation;
 import srinivasu.sams.validation.Validation;
 

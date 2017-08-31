@@ -1,4 +1,4 @@
-package srinivasu.sams;
+package srinivasu.sams.Activity;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -15,6 +15,8 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
+
+import srinivasu.sams.R;
 
 public class AddRecceWeb extends Activity {
 

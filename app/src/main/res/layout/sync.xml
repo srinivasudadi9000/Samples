@@ -7,7 +7,7 @@
     android:orientation="vertical"
     android:layout_gravity="center"
     android:gravity="center"
-    tools:context="srinivasu.sams.Sync">
+    tools:context="srinivasu.sams.Activity.Sync">
 
     <TextView
         android:layout_width="match_parent"

@@ -1,4 +1,4 @@
-package srinivasu.sams;
+package srinivasu.sams.Activity;
 
 import android.app.Activity;
 import android.content.Context;
@@ -22,6 +22,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import srinivasu.sams.Adapter.ProjectAdapter;
+import srinivasu.sams.R;
 import srinivasu.sams.helper.DBHelper;
 import srinivasu.sams.helper.Preferences;
 import srinivasu.sams.model.Login_Service;
@@ -44,7 +45,7 @@ public class Project extends Activity {
         ButterKnife.bind(this);
         project_recyler.setLayoutManager(new LinearLayoutManager(this));
        // project_recyler.setItemAnimator(new DefaultItemAnimator());
-        Preferences.setProducts("nul");
+        Preferences.setProducts("notdone");
         if (!Validation.internet(Project.this)) {
             getProject_from_local();
           //  Toast.makeText(getBaseContext(), "local db recces", Toast.LENGTH_LONG).show();

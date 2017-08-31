@@ -1,4 +1,4 @@
-package srinivasu.sams;
+package srinivasu.sams.Activity;
 
 import android.app.Activity;
 import android.content.Context;
@@ -20,6 +20,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import srinivasu.sams.Adapter.ProductAdapter;
+import srinivasu.sams.R;
 import srinivasu.sams.helper.DBHelper;
 import srinivasu.sams.helper.Preferences;
 import srinivasu.sams.model.GetProducts;

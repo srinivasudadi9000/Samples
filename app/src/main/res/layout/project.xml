@@ -7,7 +7,7 @@
     android:orientation="vertical"
     android:background="#ffffff"
     android:id="@+id/project_ll"
-    tools:context="srinivasu.sams.Project">
+    tools:context="srinivasu.sams.Activity.Project">
    <include
        layout="@layout/header"></include>
    <TextView

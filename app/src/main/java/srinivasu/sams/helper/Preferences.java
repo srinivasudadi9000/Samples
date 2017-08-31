@@ -75,7 +75,7 @@ public class Preferences  {
             type.commit();
         }else {
             SharedPreferences.Editor type = context.getSharedPreferences("PRODUCT_DISPLAY", context.MODE_PRIVATE).edit();
-            type.putString("productdisplay","notdone");
+            type.putString("productdisplay",selection);
             type.commit();
         }
     }

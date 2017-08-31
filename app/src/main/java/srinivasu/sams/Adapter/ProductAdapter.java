@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Locale;
 
 import srinivasu.sams.R;
-import srinivasu.sams.Recces_display;
+import srinivasu.sams.Activity.Recces_display;
 import srinivasu.sams.helper.Preferences;
 import srinivasu.sams.model.Products;
 

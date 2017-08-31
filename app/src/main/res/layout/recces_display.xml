@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="srinivasu.sams.Recces_display">
+    tools:context="srinivasu.sams.Activity.Recces_display">
    <include
        android:id="@+id/myheader"
        layout="@layout/header"></include>

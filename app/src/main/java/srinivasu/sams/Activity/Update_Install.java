@@ -1,4 +1,4 @@
-package srinivasu.sams;
+package srinivasu.sams.Activity;
 
 import android.app.Activity;
 import android.content.Context;
@@ -19,6 +19,9 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
@@ -39,6 +42,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.http.Part;
 import retrofit2.http.Query;
+import srinivasu.sams.R;
 import srinivasu.sams.helper.Preferences;
 import srinivasu.sams.model.UploadInstall;
 import srinivasu.sams.rest.ApiClient;
@@ -53,6 +57,7 @@ public class Update_Install extends Activity {
     SQLiteDatabase db;
     File installimage = null;
     protected Uri iv_url1 = null;
+    private DisplayImageOptions options;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,12 +67,27 @@ public class Update_Install extends Activity {
         InstallationDate_et.setText(getIntent().getStringExtra("install_date").toString());
         InstallationRemarks_et.setText(getIntent().getStringExtra("install_remark").toString());
 
+        options = new DisplayImageOptions.Builder()
+                .showImageOnLoading(R.mipmap.ic_launcher_round)
+                .showImageForEmptyUri(R.drawable.clear)
+                .showImageOnFail(R.drawable.dummy)
+                .cacheInMemory(true)
+                .cacheOnDisk(true)
+                .considerExifParams(true)
+                .bitmapConfig(Bitmap.Config.RGB_565)
+                .displayer(new RoundedBitmapDisplayer(20))
+                .build();
+
+        ImageLoader.getInstance()
+                .displayImage("http://128.199.131.14/sams/web/image_uploads/recce_uploads/" + getIntent().getStringExtra("recce_image")
+                , recceImage, options);
         Bitmap bmImage = null;
         if (!Validation.internet(Update_Install.this)) {
             bmImage = BitmapFactory.decodeFile(getIntent().getStringExtra("install_image"), null);
             recceInstallImage.setImageBitmap(bmImage);
 
         } else {
+/*
             Picasso.with(Update_Install.this)
                     .load("http://128.199.131.14/sams/web/image_uploads/recce_uploads/" + getIntent().getStringExtra("recce_image"))
                     .memoryPolicy(MemoryPolicy.NO_CACHE)
@@ -76,6 +96,7 @@ public class Update_Install extends Activity {
                     .error(R.drawable.dummy)
                     .noFade()
                     .into(recceImage);
+*/
 
             Picasso.with(Update_Install.this)
                     .load("http://128.199.131.14/sams/web/image_uploads/install_uploads/" +getIntent().getStringExtra("install_image"))

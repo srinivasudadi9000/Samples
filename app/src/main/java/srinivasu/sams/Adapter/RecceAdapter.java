@@ -23,10 +23,10 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
-import srinivasu.sams.AddRecceWeb;
-import srinivasu.sams.Product_Display;
+import srinivasu.sams.Activity.AddRecceWeb;
+import srinivasu.sams.Activity.Product_Display;
 import srinivasu.sams.R;
-import srinivasu.sams.Update_Recce;
+import srinivasu.sams.Activity.Update_Recce;
 import srinivasu.sams.helper.Preferences;
 import srinivasu.sams.model.Recce;
 import srinivasu.sams.validation.Validation;

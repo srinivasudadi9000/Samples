@@ -1,4 +1,4 @@
-package srinivasu.sams;
+package srinivasu.sams.Activity;
 
 import android.content.Context;
 import android.content.Intent;
@@ -25,6 +25,8 @@ import android.widget.Toast;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.Random;
+
+import srinivasu.sams.R;
 
 public class CanvasEdit extends AppCompatActivity implements View.OnClickListener, CanvasView.RectangleListner {
     protected ImageButton btnUndo;

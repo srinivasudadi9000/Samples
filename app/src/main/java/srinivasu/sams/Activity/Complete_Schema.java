@@ -1,4 +1,4 @@
-package srinivasu.sams;
+package srinivasu.sams.Activity;
 
 /**
  * Created by venky on 11-Aug-17.

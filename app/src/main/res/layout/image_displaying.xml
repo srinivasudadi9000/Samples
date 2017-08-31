@@ -4,10 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="srinivasu.sams.Activity.SplashScreen">
-     <ImageView
-         android:background="@drawable/j"
-         android:id="@+id/myspla"
-         android:layout_width="match_parent"
-         android:layout_height="match_parent" />
+    tools:context="srinivasu.sams.Activity.ImageDisplaying">
+<ImageView
+    android:id="@+id/myimage"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" />
 </RelativeLayout>

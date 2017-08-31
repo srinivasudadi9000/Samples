@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="srinivasu.sams.Install_display">
+    tools:context="srinivasu.sams.Activity.Install_display">
   <include
       layout="@layout/header"></include>
   <LinearLayout

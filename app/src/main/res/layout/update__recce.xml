@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="srinivasu.sams.Update_Recce">
+    tools:context="srinivasu.sams.Activity.Update_Recce">
 
     <LinearLayout
         android:layout_width="match_parent"
