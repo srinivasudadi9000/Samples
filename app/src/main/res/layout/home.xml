@@ -40,6 +40,15 @@
                 android:textStyle="bold"
                 android:id="@+id/crewnames_tv"
                 android:gravity="center"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorPrimary"
+                android:textSize="24sp"
+                android:padding="5dp"
+                android:textStyle="bold"
+                android:id="@+id/crewpersonnames_tv"
+                android:gravity="center"/>
 
             <TextView
                 android:layout_width="match_parent"
