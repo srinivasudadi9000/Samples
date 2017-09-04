@@ -2,8 +2,8 @@
     <string name="app_name">Sams</string>
     <string-array name="uoms">
         <item>UOM</item>
-        <item>Millimetre</item>
-        <item>Centimetre</item>
+        <item>Millimeter</item>
+        <item>Centimeter</item>
         <item>Inch</item>
         <item>Meter</item>
         <item>Foot</item>
