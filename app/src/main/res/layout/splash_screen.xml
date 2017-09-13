@@ -4,10 +4,44 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
     tools:context="srinivasu.sams.Activity.SplashScreen">
-     <ImageView
-         android:background="@drawable/j"
-         android:id="@+id/myspla"
-         android:layout_width="match_parent"
-         android:layout_height="match_parent" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:gravity="center"
+        >
+        <TextView
+            android:visibility="gone"
+            android:id="@+id/mysplaone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textAllCaps="true"
+            android:text="Welcome  To "
+            android:textColor="#ffffff"
+            android:textSize="35dp"
+            android:textStyle="bold" />
+
+        <TextView
+
+            android:layout_below="@+id/mysplaone"
+            android:id="@+id/myspla"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_marginBottom="120dp"
+            android:textAllCaps="true"
+            android:text=" Sams"
+            android:textColor="#ffffff"
+            android:textSize="45dp"
+            android:textStyle="bold" />
+
+    </RelativeLayout>
+
+    <include
+
+        layout="@layout/footer" />
 </RelativeLayout>

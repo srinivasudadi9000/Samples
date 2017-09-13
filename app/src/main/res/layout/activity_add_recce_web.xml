@@ -4,7 +4,8 @@
     android:id="@+id/activity_add_recce_web"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="srinivasu.sams.Activity.AddRecceWeb">
+    tools:context="srinivasu.sams.Activity.AddRecceWeb"
+    >
 
 
     <WebView

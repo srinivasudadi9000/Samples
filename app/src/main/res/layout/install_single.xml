@@ -25,6 +25,15 @@
           android:layout_height="200dp">
       </RelativeLayout>
 -->
+       <ImageView
+           android:visibility="gone"
+           android:layout_marginRight="2dp"
+           android:layout_gravity="center"
+           android:layout_weight="1.1"
+           android:id="@+id/recce_img_hide"
+           android:src="@drawable/dummy"
+           android:layout_width="match_parent"
+           android:layout_height="220dp" />
 
        <ImageView
           android:layout_marginRight="2dp"

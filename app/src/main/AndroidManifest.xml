@@ -25,25 +25,38 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Activity.SplashScreen">
+        <activity android:name=".Activity.SplashScreen"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Activity.Login" />
-        <activity android:name=".Activity.Home" />
-        <activity android:name=".Activity.Recces_display" />
-        <activity android:name=".Activity.Project" />
-        <activity android:name=".Activity.Install_display" />
-        <activity android:name=".Activity.CanvasEdit" />
-        <activity android:name=".Activity.Update_Recce" />
-        <activity android:name=".Activity.Update_Install" />
-        <activity android:name=".Activity.Sync" />
-        <activity android:name=".Activity.Product_Display" />
-        <activity android:name=".Activity.AddRecceWeb" />
-        <activity android:name=".Activity.ImageDisplaying"></activity>
+        <activity android:name=".Activity.Login"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".Activity.Home"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".Activity.Recces_display"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".Activity.Project"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".Activity.Install_display"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".Activity.CanvasEdit"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".Activity.Update_Recce"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".Activity.Update_Install"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".Activity.Sync"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".Activity.Product_Display"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".Activity.AddRecceWeb"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".Activity.ImageDisplaying"
+            android:screenOrientation="portrait"></activity>
     </application>
 
 </manifest>

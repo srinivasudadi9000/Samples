@@ -22,6 +22,12 @@
             android:layout_marginLeft="2dp"
             android:layout_marginTop="5dp"
             android:layout_weight="1">
+            <ImageView
+                android:visibility="gone"
+                android:id="@+id/recce_img_testing"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:src="@drawable/dummy" />
 
             <ImageView
                 android:id="@+id/recce_img"
